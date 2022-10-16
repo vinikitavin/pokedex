@@ -1,4 +1,3 @@
-// @ts-ignore
 import { Vue } from 'vue-property-decorator';
 
 declare module '*.vue' {

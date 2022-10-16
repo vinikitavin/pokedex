@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Pokedex Page</h1>
+    <h1>404 Page</h1>
   </div>
 </template>
 

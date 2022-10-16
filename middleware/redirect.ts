@@ -1,10 +1,10 @@
 import { ServerMiddleware } from '@nuxt/types';
 
-const myServerMiddleware: ServerMiddleware = (req, res, next) => {
+const myServerMiddleware: ServerMiddleware = (req: any, res: any, next: Function) => {
   const redirects = [
     {
       from: '/',
-      to: '/router'
+      to: '/home'
     }
   ];
   const redirect = redirects.find(r => r.from === req.url);

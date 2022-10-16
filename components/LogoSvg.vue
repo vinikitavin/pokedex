@@ -5,7 +5,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-@Component
+@Component({
+  name: 'LogoSvg'
+})
+
 export default class LogoSvg extends Vue {
 }
 </script>

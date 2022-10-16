@@ -1,5 +1,5 @@
 <template>
-  <button class="button nav-button-font nav-button-size">
+  <button class="button button_font button_size">
     {{ buttonText }}
   </button>
 </template>
@@ -9,11 +9,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class NavButton extends Vue {
-  @Prop({
-    type: String,
-    required: true
-  })
-  buttonText: string | undefined
+  @Prop({ required: true }) private readonly buttonText!: string
 }
 
 </script>
@@ -27,16 +23,16 @@ export default class NavButton extends Vue {
   box-shadow: inset 0px -9px 0px rgba(0, 0, 0, 0.18);
   align-items: start;
   justify-content: center;
-}
 
-.nav-button-font {
-  font-family: 'Karla-Bold', sans-serif;
-  font-size: 23px;
-  color: $dark;
-}
+  &_font {
+    font-family: 'Karla-Bold', sans-serif;
+    font-size: 23px;
+    color: $dark;
+  }
 
-.nav-button-size {
-  width: 231px;
-  height: 66px;
+  &_size {
+    width: 231px;
+    height: 66px;
+  }
 }
 </style>
