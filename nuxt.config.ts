@@ -1,7 +1,7 @@
 export default {
   head: {
     ssr: true,
-    title: 'pokedex',
+    title: 'Pokedex',
     htmlAttrs: {
       lang: 'en'
     },
@@ -18,7 +18,7 @@ export default {
 
   styleResources: {
     scss: [
-      '~/assets/scss/styleResources.scss'
+      '~/assets/scss/resources.scss'
     ]
   },
 
@@ -36,7 +36,12 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
-    '@nuxt/typescript-build'
+    '@nuxt/typescript-build',
+    '@nuxtjs/style-resources'
+  ],
+
+  serverMiddleware: [
+    '@/middleware/redirect.ts'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

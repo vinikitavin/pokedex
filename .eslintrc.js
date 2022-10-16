@@ -57,5 +57,5 @@ module.exports = {
         extensions: ['.ts', '.json', '.js', '.vue']
       }
     }
-  },
+  }
 };
