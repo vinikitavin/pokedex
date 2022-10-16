@@ -1,15 +1,13 @@
 import { ServerMiddleware } from '@nuxt/types';
 
-const myServerMiddleware: ServerMiddleware = (req: any, res: any, next: Function) => {
-  const redirects = [
-    {
-      from: '/',
-      to: '/home'
-    }
-  ];
-  const redirect = redirects.find(r => r.from === req.url);
+const myServerMiddleware: ServerMiddleware = (req, res, next) => {
+  enum ROUTES {
+    MAIN = '/',
+    HOME= '/home'
+}
+  const redirect = ROUTES.MAIN === req.url;
   if (redirect) {
-    res.writeHead(301, { Location: redirect.to });
+    res.writeHead(301, { Location: ROUTES.HOME });
     res.end();
   } else {
     next();
