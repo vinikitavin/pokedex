@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+// import { vueWindowSizeMixin } from 'vue-window-size';
 
 @Component
 export default class NavButton extends Vue {

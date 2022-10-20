@@ -12,4 +12,8 @@ declare module '@nuxt/types' {
   interface Context {}
 }
 
+declare module '@/types' {
+  interface Vue {}
+}
+
 export {};
