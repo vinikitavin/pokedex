@@ -46,7 +46,7 @@ export default class TheFooter extends Vue {
     }
   }
 
-  @media (max-width: 768px) and (min-width: 320px) {
+  @media (max-width: 768px) and (min-width: 375px) {
     &__container {
       padding: 21px 36px 20px 37px;
     }

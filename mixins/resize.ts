@@ -1,32 +1,34 @@
-// import { Component, Vue } from 'vue-property-decorator';
-// import { vueWindowSizeMixin } from 'vue-window-size';
-//
-// @Component
-// class ResizeMixin extends Vue {
-//   public isDesktop!: boolean
-//   public isTablet!: boolean
-//   public isMobile!: boolean
-//
-//   public definedResizeValues(): [boolean, boolean, boolean] | undefined {
-//     const screenWidth: number = vueWindowSizeMixin.computed.windowWidth();
-//     if (screenWidth > 1300) {
-//       this.isDesktop = true;
-//       this.isTablet = false;
-//       this.isMobile = false;
-//       return [this.isDesktop, this.isTablet, this.isMobile];
-//     }
-//     if (screenWidth > 767) {
-//       this.isDesktop = false;
-//       this.isTablet = true;
-//       this.isMobile = false;
-//       return [this.isDesktop, this.isTablet, this.isMobile];
-//     }
-//     if (screenWidth > 319) {
-//       this.isDesktop = false;
-//       this.isTablet = false;
-//       this.isMobile = true;
-//       return [this.isDesktop, this.isTablet, this.isMobile];
-//     }
-//   }
-// }
-// export default ResizeMixin;
+import { Component, Vue } from 'vue-property-decorator';
+import { vueWindowSizeMixin } from 'vue-window-size';
+
+@Component
+export class ResizeMixin extends Vue {
+  protected isDesktop = false
+  protected isTablet = false
+  protected isMobile = false
+  protected screenWidth: number = 0;
+
+  protected definedScreenWidth(): void {
+    this.screenWidth = vueWindowSizeMixin.computed.windowWidth();
+    if (this.screenWidth <= 2680 && this.screenWidth > 1300) {
+      this.isDesktop = true;
+      this.isTablet = false;
+      this.isMobile = false;
+    }
+    if (this.screenWidth <= 1300 && this.screenWidth >= 650) {
+      this.isDesktop = false;
+      this.isTablet = true;
+      this.isMobile = false;
+    }
+    if (this.screenWidth < 650 && this.screenWidth >= 375) {
+      this.isDesktop = false;
+      this.isTablet = false;
+      this.isMobile = true;
+    }
+  }
+
+  mounted(): void {
+    window.addEventListener('resize', this.definedScreenWidth);
+    this.definedScreenWidth();
+  }
+}

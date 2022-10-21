@@ -1,15 +1,15 @@
 <template>
   <div class="website">
-    <TheHeader v-if="isDesktop" />
-    <TheHeaderMobile v-else />
-    <Nuxt class="shadow" />
+    <TheHeader v-if="isDesktop || isTablet" />
+    <TheHeaderMobile v-if="isMobile" />
+    <Nuxt />
     <TheFooter />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { vueWindowSizeMixin } from 'vue-window-size';
+import { Component, Mixins, Watch } from 'vue-property-decorator';
+import { ResizeMixin } from '@/mixins/resize';
 import TheHeader from '@/components/TheHeader.vue';
 import TheHeaderMobile from '@/components/TheHeaderMobile.vue';
 import TheFooter from '@/components/TheFooter.vue';
@@ -22,17 +22,11 @@ import TheFooter from '@/components/TheFooter.vue';
     TheFooter
   }
 })
-export default class MainPage extends Vue {
-  isDesktop!: boolean
-
-  created(): boolean {
-    const screenWidth = vueWindowSizeMixin.computed.windowWidth();
-    if (screenWidth < 601) {
-      this.isDesktop = false;
-      return this.isDesktop;
-    }
-    this.isDesktop = true;
-    return this.isDesktop;
+export default class MainPage extends Mixins(ResizeMixin) {
+  @Watch('screenWidth')
+  private handler(value: number): void {
+    console.log(value);
+    this.definedScreenWidth();
   }
 }
 </script>
@@ -44,14 +38,9 @@ export default class MainPage extends Vue {
   grid-template-rows: 93px auto 88px;
 }
 
-@media (max-width: 601px) {
+@media (max-width: 651px) {
   .website {
     grid-template-rows: 56px auto 62px;
   }
-}
-
-.shadow {
-  //background: $dark;
-  //opacity: 0.9;
 }
 </style>

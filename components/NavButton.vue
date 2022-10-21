@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-// import { vueWindowSizeMixin } from 'vue-window-size';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
+import { ResizeMixin } from '~/mixins/resize';
 
 @Component
-export default class NavButton extends Vue {
+export default class NavButton extends Mixins(ResizeMixin) {
   @Prop({ required: true }) private readonly buttonText!: string
 }
 
@@ -34,6 +34,13 @@ export default class NavButton extends Vue {
   &_size {
     width: 231px;
     height: 66px;
+  }
+
+  @media (max-width: 767px) and (min-width: 375px) {
+    &_size {
+      width: 313px;
+      height: 55px;
+    }
   }
 }
 </style>

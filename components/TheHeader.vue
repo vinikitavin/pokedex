@@ -45,11 +45,6 @@ export default class TheHeader extends Vue {
   background-color: $third;
   box-shadow: $shadow;
 
-  &__container {
-    //width: 100%;
-    //height: 100%;
-  }
-
   @media (max-width: 2720px) and (min-width: 1441px) {
     &__container {
       display: flex;

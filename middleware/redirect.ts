@@ -1,11 +1,11 @@
 import { ServerMiddleware } from '@nuxt/types';
-// import { ROUTES } from '@/types';
+
+export enum ROUTES {
+  MAIN = '/',
+  HOME= '/home'
+}
 
 const myServerMiddleware: ServerMiddleware = (req, res, next) => {
-  enum ROUTES {
-    MAIN = '/',
-    HOME= '/home'
-  }
   const redirect = ROUTES.MAIN === req.url;
   if (redirect) {
     res.writeHead(301, { Location: ROUTES.HOME });

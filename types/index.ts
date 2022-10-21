@@ -1,4 +1,4 @@
-export enum ROUTES {
-  MAIN = '/',
-  HOME= '/home'
-}
+// export enum ROUTES {
+//   MAIN = '/',
+//   HOME= '/home'
+// }

@@ -56,39 +56,24 @@ export default class TheHeaderMobile extends Vue {
 <style lang="scss" scoped>
 .header-mobile {
   background: #F5DB13;
-  box-shadow: 0px 4px 16px rgba(1, 28, 64, 0.2);
+  box-shadow: 0 4px 16px rgba(1, 28, 64, 0.2);
   position: relative;
   width: 100%;
   grid-area: 1 / 1 / 2 / 1;
   z-index: 999;
-  //height: 56px;
-  //top: 0;
 }
 
-/* Logo */
 .header-mobile__logo {
   padding: 22px 0 0 26px;
 }
 
-/* Nav menu */
 .header-mobile__nav {
   width: 100%;
   height: 300px;
   position: fixed;
   background: linear-gradient(180deg, #F5DB13 0%, #F2B807 100%);
   overflow: hidden;
-  border-radius: 0px 0px 16px 16px;
-}
-
-.header-mobile__menu {
-  //display: flex;
-  //justify-content: space-between;
-}
-
-.hamb__link {
-    //display: block;
-    //padding: 30px;
-    //color: white;
+  border-radius: 0 0 16px 16px;
 }
 
 .hamb__link:hover {
@@ -101,15 +86,11 @@ export default class TheHeaderMobile extends Vue {
   transition: .3s ease-out;
 }
 
-/* Menu Icon */
 .header-mobile__hamb {
   cursor: pointer;
   float: right;
   padding-right: 26px;
-
 }
-
-/* Style label tag */
 
 .header-mobile__hamb-line {
   background: #212121;
@@ -121,8 +102,6 @@ export default class TheHeaderMobile extends Vue {
   margin-top: -13px;
 
 }
-
-/* Style span tag */
 
 .header-mobile__hamb-line::before,
 .header-mobile__hamb-line::after {
@@ -148,9 +127,6 @@ export default class TheHeaderMobile extends Vue {
   display: none;
 }
 
-/* Hide checkbox */
-
-/* Toggle menu icon */
 .header-mobile__side-menu:checked ~ nav {
   max-height: 100%;
 }

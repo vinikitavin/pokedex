@@ -14,18 +14,16 @@
             <NavButton button-text="See pokemons" />
           </div>
         </div>
-        <img v-if="isDesktop" alt="banner-pika" class="main-home__poster" src="@/assets/img/banner-pika-desktop.svg">
-        <img v-if="isTablet" alt="banner-pika" class="main-home__poster" src="@/assets/img/banner-pika-tablet.svg">
-        <img v-if="isMobile" alt="banner-pika" class="main-home__poster" src="@/assets/img/banner-pika-mobile.svg">
+        <div class="main-home__poster" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import NavButton from '@/components/NavButton.vue';
-import { vueWindowSizeMixin } from 'vue-window-size';
+import { ResizeMixin } from '@/mixins/resize';
 
 @Component({
   name: 'HomePage',
@@ -34,39 +32,14 @@ import { vueWindowSizeMixin } from 'vue-window-size';
     NavButton
   }
 })
-export default class HomePage extends Vue {
-  isDesktop!: boolean
-  isTablet!: boolean
-  isMobile!: boolean
-
-  created(): [boolean, boolean, boolean] | undefined {
-    const screenWidth: number = vueWindowSizeMixin.computed.windowWidth();
-    if (screenWidth > 1300) {
-      this.isDesktop = true;
-      this.isTablet = false;
-      this.isMobile = false;
-      return [this.isDesktop, this.isTablet, this.isMobile];
-    }
-    if (screenWidth > 767) {
-      this.isDesktop = false;
-      this.isTablet = true;
-      this.isMobile = false;
-      return [this.isDesktop, this.isTablet, this.isMobile];
-    }
-    if (screenWidth > 319) {
-      this.isDesktop = false;
-      this.isTablet = false;
-      this.isMobile = true;
-      return [this.isDesktop, this.isTablet, this.isMobile];
-    }
-  }
-
+export default class HomePage extends Mixins(ResizeMixin) {
   hideBurgerMenu(): void {
     const burgerButton: HTMLElement | null = document.getElementById('hamb-button');
     const bodyScrollHidden: HTMLElement | null = document.querySelector('body');
     const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
     burgerButton!.click();
     setTimeout(hideShadow, 300);
+
     function hideShadow(): void {
       shadowOfTheMain!.style.display = 'none';
       bodyScrollHidden!.style.overflow = 'auto';
@@ -86,52 +59,21 @@ export default class HomePage extends Vue {
 
   &__shadow {
     display: none;
-    position:fixed;
-    left:0;
-    top:0;
-    height:100vh;
-    width:100vw;
-    background:#212121;
-    opacity:0.5;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    background: #212121;
+    opacity: 0.5;
     z-index: 99;
   }
 
-  &__container {
-    //display: flex;
-  }
-
-  @media (max-width: 2720px) and (min-width: 1441px) {
-    &__container {
-      //justify-content: center;
-    }
-  }
-
-  @media (max-width: 1441px) and (min-width: 1281px) {
-    &__container {
-      //display: block;
-      //justify-content: center;
-    }
-  }
-
-  @media (max-width: 1300px) and (min-width: 320px) {
+  @media (max-width: 1300px) and (min-width: 375px) {
     &__container {
       display: flex;
       justify-content: center;
     }
-  }
-
-  //@media (max-width: 768px) and (min-width: 376px) {
-  //  &__container {
-  //    margin-top: 111px;
-  //    margin-left: 15px;
-  //  }
-  //}
-
-  &__content {
-    //display: flex;
-    //padding: 221px 0 0 157px;
-    //justify-content: center;
-    //padding: 221px 0 246px 157px;
   }
 
   @media (max-width: 2720px) and (min-width: 1439px) {
@@ -144,26 +86,17 @@ export default class HomePage extends Vue {
 
   @media (max-width: 1439px) and (min-width: 1301px) {
     &__content {
-      //display: flex;
       padding: 221px 0 0 157px;
-      //justify-content: center;
     }
   }
 
-  @media (max-width: 1300px) and (min-width: 320px) {
+  @media (max-width: 1300px) and (min-width: 375px) {
     &__content {
       display: flex;
       flex-direction: column-reverse;
       flex-wrap: wrap;
     }
   }
-
-  //@media (max-width: 768px) and (min-width: 376px) {
-  //  &__content {
-  //    margin-top: 111px;
-  //    margin-left: 15px;
-  //  }
-  //}
 
   &__description {
     position: relative;
@@ -181,7 +114,7 @@ export default class HomePage extends Vue {
     }
   }
 
-  @media (max-width: 767px) and (min-width: 320px) {
+  @media (max-width: 767px) and (min-width: 375px) {
     &__description {
       display: flex;
       width: 368px;
@@ -205,7 +138,7 @@ export default class HomePage extends Vue {
     }
   }
 
-  @media (max-width: 767px) and (min-width: 320px) {
+  @media (max-width: 767px) and (min-width: 375px) {
     &__title {
       font-size: 42px;
       line-height: 49px;
@@ -233,7 +166,7 @@ export default class HomePage extends Vue {
     }
   }
 
-  @media (max-width: 767px) and (min-width: 320px) {
+  @media (max-width: 767px) and (min-width: 375px) {
     &__text {
       width: 322px;
       font-size: 24px;
@@ -244,12 +177,16 @@ export default class HomePage extends Vue {
   }
 
   &__poster {
-
+    width: 793px;
+    height: 680px;
+    background: url("@/assets/img/banner-pika-desktop.svg") no-repeat, center;
   }
 
   @media (max-width: 2720px) and (min-width: 1438px) {
     &__poster {
-      margin-top: -170px;
+      width: 706px;
+      height: 539px;
+      background: url("@/assets/img/banner-pika-tablet.svg") no-repeat, center;
       margin-left: -25px;
     }
   }
@@ -263,15 +200,21 @@ export default class HomePage extends Vue {
     }
   }
 
-  @media (max-width: 1301px) and (min-width: 768px) {
+  @media (max-width: 1301px) and (min-width: 767px) {
     &__poster {
+      width: 706px;
+      height: 539px;
+      background: url("@/assets/img/banner-pika-tablet.svg") no-repeat, center;
       margin-top: 170px;
       margin-left: 15px;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     &__poster {
+      width: 375px;
+      height: 287px;
+      background: url("@/assets/img/banner-pika-mobile.svg") no-repeat, center;
       margin-top: 102px;
       margin-left: 0;
     }
