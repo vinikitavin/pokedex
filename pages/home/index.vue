@@ -64,7 +64,7 @@ export default class HomePage extends Mixins(ResizeMixin) {
     top: 0;
     height: 100vh;
     width: 100vw;
-    background: #212121;
+    background: $dark;
     opacity: 0.5;
     z-index: 99;
   }

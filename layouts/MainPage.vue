@@ -24,8 +24,7 @@ import TheFooter from '@/components/TheFooter.vue';
 })
 export default class MainPage extends Mixins(ResizeMixin) {
   @Watch('screenWidth')
-  private handler(value: number): void {
-    console.log(value);
+  private handler(): void {
     this.definedScreenWidth();
   }
 }

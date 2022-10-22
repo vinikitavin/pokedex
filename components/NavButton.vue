@@ -20,7 +20,7 @@ export default class NavButton extends Mixins(ResizeMixin) {
   display: flex;
   line-height: 52px;
   border-radius: 11px;
-  background-color: #73D677;
+  background-color: $green-btn;
   box-shadow: inset 0px -9px 0px rgba(0, 0, 0, 0.18);
   align-items: start;
   justify-content: center;

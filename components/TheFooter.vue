@@ -46,15 +46,29 @@ export default class TheFooter extends Vue {
     }
   }
 
-  @media (max-width: 768px) and (min-width: 375px) {
+  @media (max-width: 768px) and (min-width: 380px) {
     &__container {
       padding: 21px 36px 20px 37px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    &__container {
+      padding: 0 20px 20px 40px;
     }
   }
 
   &__content {
     display: flex;
     justify-content: space-between;
+  }
+
+  @media (max-width: 380px) {
+    &__content {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column-reverse;
+    }
   }
 
   @media (max-width: 2720px) and (min-width: 1441px) {
@@ -68,6 +82,14 @@ export default class TheFooter extends Vue {
     font-size: 18px;
     line-height: 21px;
     color: $dark;
+  }
+
+  @media (max-width: 380px) {
+    &__item {
+      display: flex;
+      width: 312px;
+      justify-content: center;
+    }
   }
 }
 </style>

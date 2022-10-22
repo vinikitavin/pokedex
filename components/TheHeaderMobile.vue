@@ -1,6 +1,6 @@
 <template>
   <header class="header-mobile">
-    <img alt="logo-mobile" class="header-mobile__logo" src="@/assets/img/logo-mobile.svg">
+    <img alt="logo-mobile" class="header-mobile__logo" src="@/assets/img/logo-mobile.svg" @click="routeToHomePage()">
     <input id="side-menu" class="header-mobile__side-menu" type="checkbox">
     <label class="header-mobile__hamb" for="side-menu">
       <span id="hamb-button" class="header-mobile__hamb-line" @click="shadowOfBodyAndStopScrolling()" />
@@ -8,7 +8,7 @@
     <nav class="header-mobile__nav">
       <ul class="header-mobile__menu hamb">
         <li class="hamb__item">
-          <img alt="logo" class="hamb__logo" src="@/assets/img/logo.svg" @click="reloadPageByLogo()">
+          <img alt="logo" class="hamb__logo" src="@/assets/img/logo.svg" @click="routeToHomePage()">
         </li>
         <li class="hamb__item">
           <NuxtLink class="hamb__link" to="/home">
@@ -31,13 +31,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
+import { routeToHomePage } from '@/mixins/routeToHomePage';
 
 @Component({
   name: 'TheHeaderMobile'
 })
-
-export default class TheHeaderMobile extends Vue {
+export default class TheHeaderMobile extends Mixins(routeToHomePage) {
   shadowOfBodyAndStopScrolling(): void {
     const bodyScrollHidden: HTMLElement | null = document.querySelector('body');
     const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
@@ -50,12 +50,18 @@ export default class TheHeaderMobile extends Vue {
       document.location.reload();
     } this.$router.push('/home');
   }
+
+  reloadPageByHome(): void {
+    if (this.$route.path === '/home') {
+      document.location.reload();
+    } this.$router.push('/home');
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .header-mobile {
-  background: #F5DB13;
+  background: $third;
   box-shadow: 0 4px 16px rgba(1, 28, 64, 0.2);
   position: relative;
   width: 100%;
@@ -65,19 +71,16 @@ export default class TheHeaderMobile extends Vue {
 
 .header-mobile__logo {
   padding: 22px 0 0 26px;
+  cursor: pointer;
 }
 
 .header-mobile__nav {
   width: 100%;
   height: 300px;
   position: fixed;
-  background: linear-gradient(180deg, #F5DB13 0%, #F2B807 100%);
+  background: linear-gradient(180deg, $third 0%, $primary 100%);
   overflow: hidden;
   border-radius: 0 0 16px 16px;
-}
-
-.hamb__link:hover {
-  background-color: gray;
 }
 
 .header-mobile__nav {
@@ -93,7 +96,7 @@ export default class TheHeaderMobile extends Vue {
 }
 
 .header-mobile__hamb-line {
-  background: #212121;
+  background: $dark;
   display: block;
   width: 31px;
   height: 5.5px;
@@ -105,7 +108,7 @@ export default class TheHeaderMobile extends Vue {
 
 .header-mobile__hamb-line::before,
 .header-mobile__hamb-line::after {
-  background: #212121;
+  background: $dark;
   content: '';
   display: block;
   height: 100%;
@@ -148,6 +151,7 @@ export default class TheHeaderMobile extends Vue {
 .hamb__item {
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 
 .hamb__link {
@@ -162,5 +166,6 @@ export default class TheHeaderMobile extends Vue {
   width: 138px;
   height: 51px;
   margin: 37px 0 36px 0;
+  cursor: pointer;
 }
 </style>

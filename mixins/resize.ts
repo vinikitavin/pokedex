@@ -31,4 +31,8 @@ export class ResizeMixin extends Vue {
     window.addEventListener('resize', this.definedScreenWidth);
     this.definedScreenWidth();
   }
+
+  beforeDestroy(): void {
+    window.removeEventListener('resize', this.definedScreenWidth);
+  }
 }

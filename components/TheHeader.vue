@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header__container">
       <div class="header__content">
-        <img class="header__logo" src="@/assets/img/logo.svg" alt="logo">
+        <img class="header__logo" src="@/assets/img/logo.svg" alt="logo" @click="routeToHomePage()">
         <div class="header__nav nav">
           <ul class="nav__list">
             <li class="nav__item">
@@ -28,13 +28,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
+import { routeToHomePage } from '~/mixins/routeToHomePage';
 
 @Component({
   name: 'TheHeader'
 })
 
-export default class TheHeader extends Vue {
+export default class TheHeader extends Mixins(routeToHomePage) {
 }
 </script>
 
@@ -79,6 +80,7 @@ export default class TheHeader extends Vue {
   &__logo {
     width: 157px;
     height: 63px;
+    cursor: pointer;
   }
 
   @media (max-width: 1280px) and (min-width: 601px) {
