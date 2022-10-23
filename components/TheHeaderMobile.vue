@@ -1,14 +1,14 @@
 <template>
   <header class="header-mobile">
-    <img alt="logo-mobile" class="header-mobile__logo" src="@/assets/img/logo-mobile.svg" @click="routeToHomePage()">
+    <img alt="logo-mobile" class="header-mobile__logo" src="@/assets/img/logo-mobile.svg" @click="routeToHomePage">
     <input id="side-menu" class="header-mobile__side-menu" type="checkbox">
     <label class="header-mobile__hamb" for="side-menu">
-      <span id="hamb-button" class="header-mobile__hamb-line" @click="shadowOfBodyAndStopScrolling()" />
+      <span id="hamb-button" class="header-mobile__hamb-line" @click="shadowOfBodyAndStopScrolling" />
     </label>
     <nav class="header-mobile__nav">
       <ul class="header-mobile__menu hamb">
         <li class="hamb__item">
-          <img alt="logo" class="hamb__logo" src="@/assets/img/logo.svg" @click="routeToHomePage()">
+          <img alt="logo" class="hamb__logo" src="@/assets/img/logo.svg" @click="routeToHomePage">
         </li>
         <li class="hamb__item">
           <NuxtLink class="hamb__link" to="/home">

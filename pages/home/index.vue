@@ -1,6 +1,6 @@
 <template>
   <div class="main-home">
-    <div id="shadow-of-body" class="main-home__shadow" @click="hideBurgerMenu()" />
+    <div id="shadow-of-body" class="main-home__shadow" @click="hideBurgerMenu" />
     <div class="main-home__container">
       <div class="main-home__content">
         <div class="main-home__description">
@@ -10,7 +10,7 @@
           <p class="main-home__text">
             You can know the type of Pokemon, its strengths, disadvantages and abilities
           </p>
-          <div class="main-home__button" @click="openPokedexPage()">
+          <div class="main-home__button" @click="openPokedexPage">
             <NavButton button-text="See pokemons" />
           </div>
         </div>
@@ -66,6 +66,7 @@ export default class HomePage extends Mixins(ResizeMixin) {
     width: 100vw;
     background: $dark;
     opacity: 0.5;
+    cursor: pointer;
     z-index: 99;
   }
 
@@ -76,7 +77,7 @@ export default class HomePage extends Mixins(ResizeMixin) {
     }
   }
 
-  @media (max-width: 2720px) and (min-width: 1439px) {
+  @media (min-width: 1439px) {
     &__content {
       display: flex;
       padding: 221px 0 0 157px;
@@ -182,7 +183,7 @@ export default class HomePage extends Mixins(ResizeMixin) {
     background: url("@/assets/img/banner-pika-desktop.svg") no-repeat, center;
   }
 
-  @media (max-width: 2720px) and (min-width: 1438px) {
+  @media (min-width: 1438px) {
     &__poster {
       width: 706px;
       height: 539px;

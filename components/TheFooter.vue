@@ -33,7 +33,7 @@ export default class TheFooter extends Vue {
     padding: 33px 10% 33px 10.9%;
   }
 
-  @media (max-width: 2720px) and (min-width: 1441px) {
+  @media (min-width: 1441px) {
     &__container {
       display: flex;
       justify-content: center;
@@ -71,7 +71,7 @@ export default class TheFooter extends Vue {
     }
   }
 
-  @media (max-width: 2720px) and (min-width: 1441px) {
+  @media (min-width: 1441px) {
     &__content {
       width: 1140px;
     }

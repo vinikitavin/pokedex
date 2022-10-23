@@ -10,7 +10,7 @@ export class ResizeMixin extends Vue {
 
   protected definedScreenWidth(): void {
     this.screenWidth = vueWindowSizeMixin.computed.windowWidth();
-    if (this.screenWidth <= 2680 && this.screenWidth > 1300) {
+    if (this.screenWidth > 1300) {
       this.isDesktop = true;
       this.isTablet = false;
       this.isMobile = false;

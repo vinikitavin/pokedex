@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header__container">
       <div class="header__content">
-        <img class="header__logo" src="@/assets/img/logo.svg" alt="logo" @click="routeToHomePage()">
+        <img class="header__logo" src="@/assets/img/logo.svg" alt="logo" @click="routeToHomePage">
         <div class="header__nav nav">
           <ul class="nav__list">
             <li class="nav__item">
@@ -46,7 +46,7 @@ export default class TheHeader extends Mixins(routeToHomePage) {
   background-color: $third;
   box-shadow: $shadow;
 
-  @media (max-width: 2720px) and (min-width: 1441px) {
+  @media (min-width: 1441px) {
     &__container {
       display: flex;
       justify-content: center;
@@ -71,7 +71,7 @@ export default class TheHeader extends Mixins(routeToHomePage) {
     justify-content: space-between;
   }
 
-  @media (max-width: 2720px) and (min-width: 1441px) {
+  @media (min-width: 1441px) {
     &__content {
       width: 1140px;
     }
