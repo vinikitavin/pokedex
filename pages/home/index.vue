@@ -10,7 +10,7 @@
           <p class="main-home__text">
             You can know the type of Pokemon, its strengths, disadvantages and abilities
           </p>
-          <div class="main-home__button" @click="openPokedexPage">
+          <div class="main-home__button" @click="routeToPokedexPage">
             <NavButton button-text="See pokemons" />
           </div>
         </div>
@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import NavButton from '@/components/NavButton.vue';
-import { ResizeMixin } from '@/mixins/resize';
+import { routeToPage } from '@/mixins/routeToPage';
 
 @Component({
   name: 'HomePage',
@@ -32,21 +32,8 @@ import { ResizeMixin } from '@/mixins/resize';
     NavButton
   }
 })
-export default class HomePage extends Mixins(ResizeMixin) {
-  hideBurgerMenu(): void {
-    const burgerButton: HTMLElement | null = document.getElementById('hamb-button');
-    const bodyScrollHidden: HTMLElement | null = document.querySelector('body');
-    const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
-    burgerButton!.click();
-    setTimeout(hideShadow, 300);
-
-    function hideShadow(): void {
-      shadowOfTheMain!.style.display = 'none';
-      bodyScrollHidden!.style.overflow = 'auto';
-    }
-  }
-
-  openPokedexPage(): void {
+export default class HomePage extends Mixins(routeToPage) {
+  routeToPokedexPage(): void {
     this.$router.push('/pokedex');
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <header class="header-mobile">
-    <img alt="logo-mobile" class="header-mobile__logo" src="@/assets/img/logo-mobile.svg" @click="routeToHomePage">
+    <img alt="logo-mobile" class="header-mobile__logo" src="@/assets/img/logo-mobile.svg" @click="routeToHomePageByLogo">
     <input id="side-menu" class="header-mobile__side-menu" type="checkbox">
     <label class="header-mobile__hamb" for="side-menu">
       <span id="hamb-button" class="header-mobile__hamb-line" @click="shadowOfBodyAndStopScrolling" />
@@ -8,14 +8,14 @@
     <nav class="header-mobile__nav">
       <ul class="header-mobile__menu hamb">
         <li class="hamb__item">
-          <img alt="logo" class="hamb__logo" src="@/assets/img/logo.svg" @click="routeToHomePage">
+          <img alt="logo" class="hamb__logo" src="@/assets/img/logo.svg" @click="routeToHomePageByLogo">
         </li>
-        <li class="hamb__item">
+        <li class="hamb__item" @click="routeToPagesByNuxtLink">
           <NuxtLink class="hamb__link" to="/home">
             Home
           </NuxtLink>
         </li>
-        <li class="hamb__item">
+        <li class="hamb__item" @click="routeToPagesByNuxtLink">
           <NuxtLink class="hamb__link" to="/pokedex">
             Pokédex
           </NuxtLink>
@@ -32,29 +32,17 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
-import { routeToHomePage } from '@/mixins/routeToHomePage';
+import { routeToPage } from '@/mixins/routeToPage';
 
 @Component({
   name: 'TheHeaderMobile'
 })
-export default class TheHeaderMobile extends Mixins(routeToHomePage) {
+export default class TheHeaderMobile extends Mixins(routeToPage) {
   shadowOfBodyAndStopScrolling(): void {
     const bodyScrollHidden: HTMLElement | null = document.querySelector('body');
     const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
     shadowOfTheMain!.style.display = 'block';
     bodyScrollHidden!.style.overflow = 'hidden';
-  }
-
-  reloadPageByLogo(): void {
-    if (this.$route.path === '/home') {
-      document.location.reload();
-    } this.$router.push('/home');
-  }
-
-  reloadPageByHome(): void {
-    if (this.$route.path === '/home') {
-      document.location.reload();
-    } this.$router.push('/home');
   }
 }
 </script>
@@ -78,7 +66,7 @@ export default class TheHeaderMobile extends Mixins(routeToHomePage) {
   width: 100%;
   height: 300px;
   position: fixed;
-  background: linear-gradient(180deg, $third 0%, $primary 100%);
+  background: $yellow-gradient;
   overflow: hidden;
   border-radius: 0 0 16px 16px;
 }
@@ -86,7 +74,7 @@ export default class TheHeaderMobile extends Mixins(routeToHomePage) {
 .header-mobile__nav {
   margin-top: -44px;
   max-height: 0;
-  transition: .3s ease-out;
+  transition: .2s ease-out;
 }
 
 .header-mobile__hamb {
