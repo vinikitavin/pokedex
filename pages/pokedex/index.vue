@@ -10,7 +10,7 @@
         <div class="main-pokedex__pokemons cards">
           <div class="cards__filter" />
           <div class="cards__items">
-            <PokeCard v-for="pokemon in pokemons" :key="pokemon.id" :pokemons="pokemon" />
+            <PokeCard v-for="pokemon in pokemons" :key="pokemon.id" :pokemon="pokemon" />
           </div>
         </div>
       </div>
@@ -21,21 +21,27 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import { routeToPage } from '@/mixins/routeToPage';
+import PokeCard from '@/components/PokeCard.vue';
 import axios from 'axios';
-import { IItem, IPoke } from '~/types/pokemons';
+import { IItem, IPoke, IUrl } from '~/types/pokemons';
 
 @Component({
   name: 'PokedexPage',
-  layout: 'MainPage'
+  layout: 'MainPage',
+  components: {
+    PokeCard
+  }
 })
 export default class PokedexPage extends Mixins(routeToPage) {
-  async asyncData(): {
+  pokemons: any = {}
+
+  async mounted() {
     try {
       const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon');
       const pokeResponse = await Promise.all(
         getPokeLink.data.results.map((item: IItem) => axios.get(item.url))
       );
-      const pokeResult: IPoke = pokeResponse.map((url) => ({
+      const pokemons: IPoke[] = pokeResponse.map((url: IUrl) => ({
         id: url.data.id,
         name: url.data.name,
         img: url.data.sprites.other.dream_world.front_default,
@@ -48,9 +54,9 @@ export default class PokedexPage extends Mixins(routeToPage) {
           speed: { ...url.data.stats }[5].base_stat
         },
         type_1: { ...url.data.types }[0].type.name,
-        type_2: { ...url.data.types }
+        type_2: { ...url.data.types }[1]
       }));
-      return { pokeResult };
+      this.pokemons = pokemons;
     } catch (error) {
       console.log(error);
     }

@@ -2,7 +2,7 @@
   <div class="poke-card">
     <div class="poke-card__prop prop">
       <div class="prop__name">
-        {{ name }}
+        {{ pokemon.name }}
       </div>
       <div class="prop__characteristics">
         <div class="prop__attack" />
@@ -20,6 +20,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import NavButton from '@/components/NavButton.vue';
+import { IPoke } from '~/types/pokemons';
 
 @Component({
   name: 'PokeCard',
@@ -28,7 +29,7 @@ import NavButton from '@/components/NavButton.vue';
   }
 })
 export default class PokeCard extends Vue {
-  @Prop(Object) readonly pokemon: Object | undefined
+  @Prop({ required: true }) readonly pokemon!: IPoke
 }
 
 </script>

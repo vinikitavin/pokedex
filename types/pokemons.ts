@@ -12,10 +12,18 @@ export interface IPoke {
   },
   readonly 'type_1': 'grass',
   readonly 'type_2': 'poison' | undefined
-
 }
 
 export interface IItem {
   readonly 'name': 'bulbasaur',
   readonly 'url': 'https://pokeapi.co/api/v2/pokemon/1/',
+}
+
+export interface IUrl {
+  data: Object
+  status: 200
+  statusText: string
+  headers: Object
+  config: Object
+  request: XMLHttpRequest
 }
