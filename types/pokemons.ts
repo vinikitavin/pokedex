@@ -11,7 +11,13 @@ export interface IPoke {
     readonly 'speed': 45,
   },
   readonly 'type_1': 'grass',
-  readonly 'type_2': 'poison' | undefined
+  readonly 'type_2': {
+    'slot': number,
+    'type': {
+      'name': string,
+      'url': string
+    }
+  }
 }
 
 export interface IItem {

@@ -10,16 +10,18 @@
         <div class="main-pokedex__pokemons cards">
           <div class="cards__filter" />
           <div class="cards__items">
-            <PokeCard v-for="pokemon in pokemons" :key="pokemon.id" :pokemon="pokemon" />
+            <PokeCard v-for="pokemon in sizedPokemonsArr" :key="pokemon.id" :pokemon="pokemon" />
           </div>
         </div>
+        <button class="main-pokedex__btn-prev" :disabled="pageNumber === 0" @click="prevPage" />
+        <button class="main-pokedex__btn-next" :disabled="pageNumber >= (fullPokemonsArr.length / 9) - 1" @click="nextPage" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
+import { Component, Mixins, Watch } from 'vue-property-decorator';
 import { routeToPage } from '@/mixins/routeToPage';
 import PokeCard from '@/components/PokeCard.vue';
 import axios from 'axios';
@@ -33,11 +35,27 @@ import { IItem, IPoke, IUrl } from '~/types/pokemons';
   }
 })
 export default class PokedexPage extends Mixins(routeToPage) {
-  pokemons: any = {}
+  fullPokemonsArr: Array<object> = []
+  sizedPokemonsArr: Array<object> = []
+  pageNumber: number = 0
+  size: number = 9
 
-  async mounted() {
+  @Watch('pageNumber')
+  private handler(): void {
+    this.getSizedPokeCards();
+  }
+
+  nextPage(): void {
+    this.pageNumber += 1;
+  }
+
+  prevPage(): void {
+    this.pageNumber -= 1;
+  }
+
+  async getPokemons(): Promise<void> {
     try {
-      const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon');
+      const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=649&offset=0');
       const pokeResponse = await Promise.all(
         getPokeLink.data.results.map((item: IItem) => axios.get(item.url))
       );
@@ -56,10 +74,21 @@ export default class PokedexPage extends Mixins(routeToPage) {
         type_1: { ...url.data.types }[0].type.name,
         type_2: { ...url.data.types }[1]
       }));
-      this.pokemons = pokemons;
+      this.fullPokemonsArr = pokemons;
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getSizedPokeCards(): void {
+    const start = this.pageNumber * this.size;
+    const end = start + this.size;
+    this.sizedPokemonsArr = this.fullPokemonsArr.slice(start, end);
+  }
+
+  async mounted(): Promise<void> {
+    await this.getPokemons();
+    await this.getSizedPokeCards();
   }
 }
 </script>
@@ -117,6 +146,35 @@ export default class PokedexPage extends Mixins(routeToPage) {
     font-size: 16px;
     line-height: 20px;
     color: $dark;
+  }
+
+  &__btn-prev,
+  &__btn-middle,
+  &__btn-next {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 16px;
+    background: $dark-grey;
+  }
+
+  &__btn-prev:hover,
+  &__btn-next:hover {
+    background: $dark;
+  }
+
+  &__btn-middle {
+    cursor: default;
+  }
+
+  .cards {
+    &__items {
+      display: grid;
+      grid-template-columns: 352px 352px 352px;
+      grid-template-rows: 137px 137px 137px;
+      column-gap: 34px;
+      row-gap: 45px;
+    }
   }
 }
 </style>
