@@ -10,7 +10,7 @@
         <div class="main-pokedex__pokemons cards">
           <div class="cards__filter">
             <PokeTypes :full-poke-arr="fullPokeArr" @type="getTypedArr" />
-            <PokeAttack :full-poke-arr="fullPokeArr" />
+            <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArr" />
           </div>
           <div class="cards__items">
             <PokeCard v-for="pokemon in getPokeCard" :key="pokemon.id" :pokemon="pokemon" />
@@ -47,10 +47,13 @@ export default class PokedexPage extends Mixins(routeToPage) {
   fullPokeArr: Array<IPoke> = []
   searchedPokeArr: Array<IPoke> = []
   typedPokeArr: Array<IPoke> = []
-  // pokeTypes: Array<string> = []
+  attackPokeArr: Array<IPoke> = []
+
   pageNumber: number = 0
   size: number = 9
 
+  // Получение финального массива
+  //
   // get getPokeCard(): Array<object> {
   //   let data: Array<object> = [];
   //   const start = this.pageNumber * this.size;
@@ -62,6 +65,8 @@ export default class PokedexPage extends Mixins(routeToPage) {
   //   }
   //   return data;
   // }
+  //
+  // Тут повесить финальный массив, который будет
   //
   // get getPokeArrLength(): number {
   //   if (this.pokeTypes.length) {
@@ -110,6 +115,10 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   getTypedArr(data: Array<IPoke>): void {
     this.typedPokeArr = data;
+  }
+
+  getAttackArr(data: Array<IPoke>): void {
+    this.attackPokeArr = data;
   }
 
   mounted(): void {
