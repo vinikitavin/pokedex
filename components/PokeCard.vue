@@ -6,14 +6,24 @@
       </h3>
       <div class="prop__characteristics">
         <div class="prop__attack">
-          {{ pokemon.stats.attack }}
+          <div class="prop__attack-data">
+            {{ pokemon.stats.attack }}
+          </div>
+          <h6 class="prop__attack-data-name">
+            Attack
+          </h6>
         </div>
         <div class="prop__defense">
-          {{ pokemon.stats.defense }}
+          <div class="prop__defense-data">
+            {{ pokemon.stats.defense }}
+          </div>
+          <h6 class="prop__defense-data-name">
+            Defense
+          </h6>
         </div>
       </div>
       <div class="prop__types">
-        <NavButton class="prop__type-one" :pokemon="pokemon" button-text="" />
+        <NavButton :pokemon="pokemon" button-text="" />
       </div>
     </div>
     <img :src="pokemon.img" class="poke-card__img">
@@ -33,7 +43,7 @@ import { IPoke } from '~/types/pokemons';
 })
 export default class PokeCard extends Vue {
   pokeName: string = ''
-  isImgNotFound: boolean = false
+  // isImgNotFound: boolean = false
 
   @Prop({ required: true }) readonly pokemon!: IPoke
 
@@ -53,9 +63,10 @@ export default class PokeCard extends Vue {
   height: 137px;
   border-radius: 8px;
   background: $light-grey;
+  filter: drop-shadow(4px 4px 4px rgba(33, 33, 33, 0.1));
 
   &__prop {
-    padding: 12px 0 12px 26px;
+    padding: 12px 0 0 26px;
   }
 
   .prop {
@@ -65,7 +76,7 @@ export default class PokeCard extends Vue {
 
     &__characteristics {
       display: flex;
-      margin-bottom: 10px;
+      margin-bottom: 23px;
     }
 
     &__attack {
@@ -83,6 +94,19 @@ export default class PokeCard extends Vue {
       border: 3px solid $dark;
       border-radius: 50%;
       text-align: center;
+    }
+
+    &__attack-data {
+      margin-bottom: 6px;
+    }
+
+    &__attack-data-name,
+    &__defense-data-name {
+    color: $grey-text;
+    }
+
+    &__defense-data {
+      margin-bottom: 6px;
     }
 
     &__types {

@@ -1,16 +1,19 @@
 export interface IPoke {
-  readonly 'id': 1,
-  readonly 'name': 'bulbasaur',
-  readonly 'img': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
-  readonly 'stats': {
-    readonly 'hp': 45,
-    readonly 'attack': 49,
-    readonly 'defense': 49,
-    readonly 'special_attack': 65,
-    readonly 'special_defense': 65,
-    readonly 'speed': 45,
+  readonly 'id': number,
+  readonly 'name': string,
+  readonly 'img': {
+    type: string,
+    default: 'https://tsum.by/images/no-photo.png'
   },
-  readonly 'type_1': 'grass',
+  readonly 'stats': {
+    readonly 'hp': number,
+    readonly 'attack': number,
+    readonly 'defense': number,
+    readonly 'special_attack': number,
+    readonly 'special_defense': number,
+    readonly 'speed': number,
+  },
+  readonly 'type_1': string,
   readonly 'type_2': {
     'slot': number,
     'type': {
@@ -26,7 +29,33 @@ export interface IItem {
 }
 
 export interface IUrl {
-  data: Object
+  data: {
+    id: number,
+    name: string,
+    sprites: {
+      other: {
+        dream_world: {
+          front_default: string
+        }
+      }
+    },
+    stats: [{
+      base_stat: number
+    }],
+    types: [{
+      slot: number,
+      type: {
+        name: string,
+        url: string
+      }},
+      {
+        slot: number,
+        type: {
+          name: string,
+          url: string
+        }}
+    ]
+  }
   status: 200
   statusText: string
   headers: Object

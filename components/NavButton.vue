@@ -32,7 +32,7 @@ export default class NavButton extends Mixins(ResizeMixin) {
   typeTwoName: string = ''
 
   @Prop({ required: true }) private readonly buttonText!: string
-  @Prop({ required: true }) readonly pokemon!: IPoke
+  @Prop({ required: false }) readonly pokemon!: IPoke
 
   created(): void {
     if (this.$route.path === '/pokedex') {
@@ -181,10 +181,11 @@ export default class NavButton extends Mixins(ResizeMixin) {
     width: 60px;
     height: 16px;
     box-shadow: inset 0px -2px 0px rgba(0, 0, 0, 0.18);
+    margin-right: 13px;
+  }
+}
 
-  }
-  .button-types {
-    display: flex;
-  }
+.button-types {
+  display: flex;
 }
 </style>
