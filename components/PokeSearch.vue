@@ -1,5 +1,10 @@
 <template>
-  <input v-model="searchValue" class="poke-search" placeholder="Encuentra tu pokémon..." @click="search">
+  <input
+    v-model="searchValue"
+    class="poke-search"
+    placeholder="Encuentra tu pokémon..."
+    @click="search"
+  >
 </template>
 
 <script lang="ts">

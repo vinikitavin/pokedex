@@ -6,10 +6,10 @@
         <p class="main-pokedex__title">
           800 <b>Pokemons</b> for you to choose your favorite
         </p>
-        <PokeSearch :full-poke-arr="fullPokeArr" @search="getSearchedValue" />
+        <PokeSearch :full-poke-arr="fullPokeArr" @search="getSearchedArr" />
         <div class="main-pokedex__pokemons cards">
           <div class="cards__filter">
-            <PokeTypes v-model="pokeTypes" />
+            <PokeTypes :full-poke-arr="fullPokeArr" @type="getTypedArr" />
             <PokeAttack :full-poke-arr="fullPokeArr" />
           </div>
           <div class="cards__items">
@@ -46,27 +46,28 @@ import { IItem, IPoke } from '~/types/pokemons';
 export default class PokedexPage extends Mixins(routeToPage) {
   fullPokeArr: Array<IPoke> = []
   searchedPokeArr: Array<IPoke> = []
-  pokeTypes: Array<string> = []
+  typedPokeArr: Array<IPoke> = []
+  // pokeTypes: Array<string> = []
   pageNumber: number = 0
   size: number = 9
 
-  get getPokeCard(): Array<object> {
-    let data: Array<object> = [];
-    const start = this.pageNumber * this.size;
-    const end = start + this.size;
-    if (this.pokeTypes.length) {
-      data = this.fullPokeArr.filter((item) => this.pokeTypes.includes(item.type_1)).slice(start, end);
-    } else {
-      data = this.fullPokeArr.slice(start, end);
-    }
-    return data;
-  }
-
-  get getPokeArrLength(): number {
-    if (this.pokeTypes.length) {
-      return this.fullPokeArr.filter((item) => this.pokeTypes.includes(item.type_1)).length;
-    } return this.fullPokeArr.length;
-  }
+  // get getPokeCard(): Array<object> {
+  //   let data: Array<object> = [];
+  //   const start = this.pageNumber * this.size;
+  //   const end = start + this.size;
+  //   if (this.pokeTypes.length) {
+  //     data = this.fullPokeArr.filter((item) => this.pokeTypes.includes(item.type_1)).slice(start, end);
+  //   } else {
+  //     data = this.fullPokeArr.slice(start, end);
+  //   }
+  //   return data;
+  // }
+  //
+  // get getPokeArrLength(): number {
+  //   if (this.pokeTypes.length) {
+  //     return this.fullPokeArr.filter((item) => this.pokeTypes.includes(item.type_1)).length;
+  //   } return this.fullPokeArr.length;
+  // }
 
   nextPage(): void {
     this.pageNumber += 1;
@@ -103,8 +104,12 @@ export default class PokedexPage extends Mixins(routeToPage) {
     }
   }
 
-  getSearchedValue(data: Array<IPoke>): void {
+  getSearchedArr(data: Array<IPoke>): void {
     this.searchedPokeArr = data;
+  }
+
+  getTypedArr(data: Array<IPoke>): void {
+    this.typedPokeArr = data;
   }
 
   mounted(): void {

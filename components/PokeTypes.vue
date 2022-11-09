@@ -4,40 +4,40 @@
       <div class="poke-type__type">
         <input
           id="fire"
-          :value="value"
+          v-model="typeValue"
+          value="fire"
           class="poke-type__input"
           type="checkbox"
-          @input="$emit('input', 'fire')"
         >
         <label for="fire">Fire</label>
       </div>
       <div class="poke-type__type">
         <input
           id="normal"
-          :value="value"
+          v-model="typeValue"
+          value="normal"
           type="checkbox"
           class="poke-type__input"
-          @input="$emit('input', 'normal')"
         >
         <label for="normal">Normal</label>
       </div>
       <div class="poke-type__type">
         <input
           id="electric"
-          :value="value"
+          v-model="typeValue"
+          value="electric"
           type="checkbox"
           class="poke-type__input"
-          @input="$emit('input', 'electric')"
         >
         <label for="electric">Electric</label>
       </div>
       <div class="poke-type__type">
         <input
           id="water"
-          :value="value"
+          v-model="typeValue"
+          value="water"
           type="checkbox"
           class="poke-type__input"
-          @input="$emit('input', 'water')"
         >
         <label for="water">Water</label>
       </div>
@@ -46,17 +46,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   name: 'PokeTypes'
 })
 export default class PokeTypes extends Vue {
-  @Prop({ required: false }) readonly value!: Array<string>
+  typeValue: Array<string> = []
 
-  // type(): void {
-  //   this.$emit('type', this.value);
-  // }
+  @Prop({ required: true }) readonly fullPokeArr!: Array<object>
+
+  get getTypedPokeArr(): Array<object> {
+    if (this.typeValue.length) {
+      return this.fullPokeArr.filter((item) => this.typeValue.includes(item.type_1));
+    }
+    return this.fullPokeArr;
+  }
+
+  @Watch('typeValue')
+
+  type(): void {
+    this.$emit('type', this.getTypedPokeArr);
+  }
 }
 </script>
 
