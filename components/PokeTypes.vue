@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   name: 'PokeTypes'
@@ -54,19 +54,24 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 export default class PokeTypes extends Vue {
   typeValue: Array<string> = []
 
-  @Prop({ required: true }) readonly fullPokeArr!: Array<object>
-
-  get getTypedPokeArr(): Array<object> {
-    if (this.typeValue.length) {
-      return this.fullPokeArr.filter((item) => this.typeValue.includes(item.type_1));
-    }
-    return this.fullPokeArr;
-  }
+  // @Prop({ required: true }) readonly fullPokeArr!: Array<object>
+  //
+  // get getTypedPokeArr(): Array<object> {
+  //   if (this.typeValue.length) {
+  //     return this.fullPokeArr.filter((item: IPoke) => {
+  //       if (typeof item.type_2 !== 'undefined') {
+  //         return this.typeValue.includes(item.type_1) && this.typeValue.includes(item.type_2.type.name);
+  //       }
+  //       return this.typeValue.includes(item.type_1);
+  //     });
+  //   }
+  //   return [];
+  // }
 
   @Watch('typeValue')
 
   type(): void {
-    this.$emit('type', this.getTypedPokeArr);
+    this.$emit('type', this.typeValue);
   }
 }
 </script>

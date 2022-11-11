@@ -30,18 +30,25 @@ import { IPoke } from '~/types/pokemons';
 export default class PokeAttack extends Vue {
   minAttack: number = 5
   maxAttack: number = 165
-  attackPokeArr: Array<object> = []
+  attackPokeArr: Array<IPoke> = []
 
   @Prop({ required: true }) readonly fullPokeArr!: Array<object>
 
   getAttackPokeArr(): void {
-    this.attackPokeArr = this.fullPokeArr.filter((pokemon: any) => pokemon.stats.attack >= this.minAttack && pokemon.stats.attack <= this.maxAttack);
+    this.attackPokeArr = this.fullPokeArr.filter((pokemon: IPoke) => pokemon.stats.attack >=
+      this.minAttack &&
+      pokemon.stats.attack <=
+      this.maxAttack);
   }
 
   @Watch('attackPokeArr')
 
   attack(): void {
-    this.$emit('attack', this.attackPokeArr);
+    this.$emit('attack', {
+      min: this.minAttack,
+      max: this.maxAttack,
+      arr: this.attackPokeArr
+    });
   }
 }
 </script>

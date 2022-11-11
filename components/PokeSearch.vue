@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   name: 'PokeSearch'
@@ -16,19 +16,19 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 export default class PokeSearch extends Vue {
   searchValue: string = ''
 
-  @Prop({ required: true }) readonly fullPokeArr!: Array<object>
-
-  get getSearchedPokeArr(): Array<object> {
-    if (this.searchValue.trim().length) {
-      return this.fullPokeArr.filter((poke: any) => poke.name.toLowerCase().includes(this.searchValue.trim().toLowerCase()));
-    }
-    return this.fullPokeArr;
-  }
+  // @Prop({ required: true }) readonly fullPokeArr!: Array<object>
+  //
+  // get getSearchedPokeArr(): Array<object> {
+  //   if (this.searchValue.trim().length) {
+  //     return this.fullPokeArr.filter((poke: any) => poke.name.toLowerCase().includes(this.searchValue.trim().toLowerCase()));
+  //   }
+  //   return [];
+  // }
 
   @Watch('searchValue')
 
   search(): void {
-    this.$emit('search', this.getSearchedPokeArr);
+    this.$emit('search', this.searchValue);
   }
 }
 </script>

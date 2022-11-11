@@ -6,19 +6,19 @@
         <p class="main-pokedex__title">
           800 <b>Pokemons</b> for you to choose your favorite
         </p>
-        <PokeSearch :full-poke-arr="fullPokeArr" @search="getSearchedArr" />
+        <PokeSearch @search="getSearchedArr" />
         <div class="main-pokedex__pokemons cards">
           <div class="cards__filter">
-            <PokeTypes :full-poke-arr="fullPokeArr" @type="getTypedArr" />
+            <PokeTypes @type="getTypedArr" />
             <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArr" />
           </div>
           <div class="cards__items">
-            <PokeCard v-for="pokemon in getPokeCard" :key="pokemon.id" :pokemon="pokemon" />
+            <PokeCard v-for="pokemon in getFilteredPokeArr" :key="pokemon.id" :pokemon="pokemon" />
           </div>
         </div>
         <div class="main-pokedex__buttons">
           <button class="main-pokedex__btn-prev" :disabled="pageNumber === 0" @click="prevPage" />
-          <button class="main-pokedex__btn-next" :disabled="pageNumber >= (getPokeArrLength / 9) - 1" @click="nextPage" />
+          <button class="main-pokedex__btn-next" :disabled="pageNumber >= (getFilteredPokeArr.length / 9) - 1" @click="nextPage" />
         </div>
       </div>
     </div>
@@ -46,11 +46,97 @@ import { IItem, IPoke } from '~/types/pokemons';
 export default class PokedexPage extends Mixins(routeToPage) {
   fullPokeArr: Array<IPoke> = []
   searchedPokeArr: Array<IPoke> = []
+  searchValue: string = ''
   typedPokeArr: Array<IPoke> = []
-  attackPokeArr: Array<IPoke> = []
+  typeValue: Array<string> = []
+  minMaxAttack: { min: number; max: number; arr: Array<IPoke>; } = { min: 5, max: 165, arr: [] }
+  testValue: number = 0
 
   pageNumber: number = 0
   size: number = 9
+
+  get testFunction(): number {
+    return this.testValue + 5;
+  }
+
+  get getFilteredPokeArr(): Array<IPoke> {
+    const start = this.pageNumber * this.size;
+    const end = start + this.size;
+
+    const searchValueLength = this.searchValue.length;
+    const typedValueLength = this.typeValue.length;
+    const attackArrLength = this.minMaxAttack.arr.length;
+
+    console.log('до 1');
+    if (searchValueLength && !typedValueLength && !attackArrLength) {
+      console.log('1');
+      return this.getSearchedPokeArr(this.fullPokeArr).slice(start, end);
+    } // 1 +
+    console.log('до 1 - 2');
+    if (searchValueLength && typedValueLength && !attackArrLength) {
+      console.log('1 - 2');
+      return this.getTypedPokeArr(this.searchedPokeArr).slice(start, end);
+    } // 1 - 2 +
+    console.log('до 1 - 2 - 3');
+    if (searchValueLength && typedValueLength && attackArrLength) {
+      console.log('1 - 2 - 3');
+      return this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr)).slice(start, end);
+    } // 1 - 2 - 3 +
+    console.log('до 1 - 3');
+    if (searchValueLength && !typedValueLength && attackArrLength) {
+      console.log('1 - 3');
+      return this.getAttackPokeArr(this.searchedPokeArr).slice(start, end);
+    } // 1 - 3 +
+    console.log('до 2');
+    if (!searchValueLength && typedValueLength && !attackArrLength) {
+      console.log('2');
+      return this.getTypedPokeArr(this.fullPokeArr).slice(start, end);
+    } // 2 +
+    console.log('до 2 - 3');
+    if (!searchValueLength && typedValueLength && attackArrLength) {
+      console.log('2 - 3');
+      return this.getAttackPokeArr(this.typedPokeArr).slice(start, end);
+    } // 2 - 3 +
+    console.log('до 3');
+    if (!searchValueLength && !typedValueLength && attackArrLength) {
+      console.log('3');
+      return this.minMaxAttack.arr.slice(start, end);
+    } // 3
+    console.log('все');
+    return this.fullPokeArr.slice(start, end);
+  }
+
+  getSearchedPokeArr(pokeArr: Array<IPoke>): Array<IPoke> | [] {
+    let data = [];
+    if (this.searchValue.trim().length) {
+      data = pokeArr.filter((poke: any) => poke.name.toLowerCase().includes(this.searchValue.trim().toLowerCase()));
+      this.searchedPokeArr = data;
+      return data;
+    }
+    return [];
+  }
+
+  getTypedPokeArr(pokeArr: Array<IPoke>): Array<IPoke> {
+    let data: Array<any> = [];
+    if (this.typeValue.length) {
+      data = pokeArr.filter((item: IPoke) => {
+        if (typeof item.type_2 !== 'undefined') {
+          return this.typeValue.includes(item.type_1) && this.typeValue.includes(item.type_2.type.name);
+        }
+        return this.typeValue.includes(item.type_1);
+      });
+      this.typedPokeArr = data;
+      return data;
+    }
+    return data;
+  }
+
+  getAttackPokeArr(pokeArr: Array<IPoke>): Array<IPoke> {
+    return pokeArr.filter((pokemon: IPoke) => pokemon.stats.attack >=
+        this.minMaxAttack.min &&
+        pokemon.stats.attack <=
+        this.minMaxAttack.max);
+  }
 
   // Получение финального массива
   //
@@ -82,7 +168,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
     this.pageNumber -= 1;
   }
 
-  async getPokeData(): Promise<void> {
+  async getFullPokeArr(): Promise<void> {
     try {
       const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=648&offset=0');
       const pokeResponse = await Promise.all(
@@ -109,20 +195,20 @@ export default class PokedexPage extends Mixins(routeToPage) {
     }
   }
 
-  getSearchedArr(data: Array<IPoke>): void {
-    this.searchedPokeArr = data;
+  getSearchedArr(data: string): void {
+    this.searchValue = data;
   }
 
-  getTypedArr(data: Array<IPoke>): void {
-    this.typedPokeArr = data;
+  getTypedArr(data: Array<string>): void {
+    this.typeValue = data;
   }
 
-  getAttackArr(data: Array<IPoke>): void {
-    this.attackPokeArr = data;
+  getAttackArr(data: { min: number; max: number; arr: Array<IPoke>}): void {
+    this.minMaxAttack = data;
   }
 
   mounted(): void {
-    this.getPokeData();
+    this.getFullPokeArr();
   }
 }
 </script>
