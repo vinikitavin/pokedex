@@ -6,10 +6,10 @@
         <p class="main-pokedex__title">
           800 <b>Pokemons</b> for you to choose your favorite
         </p>
-        <PokeSearch @search="getSearchedArr" />
+        <PokeSearch class="main-pokedex__search" @search="getSearchedArr" />
         <div class="main-pokedex__pokemons cards">
           <div class="cards__filter">
-            <PokeTypes @type="getTypedArr" />
+            <PokeTypes class="cards__types" @type="getTypedArr" />
             <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArr" />
           </div>
           <div class="cards__items">
@@ -67,42 +67,27 @@ export default class PokedexPage extends Mixins(routeToPage) {
     const typedValueLength = this.typeValue.length;
     const attackArrLength = this.minMaxAttack.arr.length;
 
-    console.log('до 1');
     if (searchValueLength && !typedValueLength && !attackArrLength) {
-      console.log('1');
       return this.getSearchedPokeArr(this.fullPokeArr).slice(start, end);
-    } // 1 +
-    console.log('до 1 - 2');
+    }
     if (searchValueLength && typedValueLength && !attackArrLength) {
-      console.log('1 - 2');
       return this.getTypedPokeArr(this.searchedPokeArr).slice(start, end);
-    } // 1 - 2 +
-    console.log('до 1 - 2 - 3');
+    }
     if (searchValueLength && typedValueLength && attackArrLength) {
-      console.log('1 - 2 - 3');
       return this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr)).slice(start, end);
-    } // 1 - 2 - 3 +
-    console.log('до 1 - 3');
+    }
     if (searchValueLength && !typedValueLength && attackArrLength) {
-      console.log('1 - 3');
       return this.getAttackPokeArr(this.searchedPokeArr).slice(start, end);
-    } // 1 - 3 +
-    console.log('до 2');
+    }
     if (!searchValueLength && typedValueLength && !attackArrLength) {
-      console.log('2');
       return this.getTypedPokeArr(this.fullPokeArr).slice(start, end);
-    } // 2 +
-    console.log('до 2 - 3');
+    }
     if (!searchValueLength && typedValueLength && attackArrLength) {
-      console.log('2 - 3');
       return this.getAttackPokeArr(this.typedPokeArr).slice(start, end);
-    } // 2 - 3 +
-    console.log('до 3');
+    }
     if (!searchValueLength && !typedValueLength && attackArrLength) {
-      console.log('3');
       return this.minMaxAttack.arr.slice(start, end);
-    } // 3
-    console.log('все');
+    }
     return this.fullPokeArr.slice(start, end);
   }
 
@@ -250,6 +235,10 @@ export default class PokedexPage extends Mixins(routeToPage) {
     margin-bottom: 33px;
   }
 
+  &__search {
+    margin-bottom: 36px;
+  }
+
   &__buttons {
     display: flex;
     justify-content: center;
@@ -285,6 +274,15 @@ export default class PokedexPage extends Mixins(routeToPage) {
       grid-template-rows: 137px 137px 137px;
       column-gap: 34px;
       row-gap: 45px;
+    }
+
+    &__filter {
+      display: flex;
+      margin-bottom: 53px;
+    }
+
+    &__types {
+      margin-right: 64px;
     }
   }
 }

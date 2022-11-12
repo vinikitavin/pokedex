@@ -115,7 +115,7 @@ export default class PokeTypes extends Vue {
   padding: 0 8px;
   font-size: 12px;
   position: absolute;
-  right: -121px;
+  right: -120px;
   top: 10px;
   z-index: 1;
   text-align: center;

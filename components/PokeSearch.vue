@@ -42,7 +42,6 @@ export default class PokeSearch extends Vue {
   border-radius: 40px;
   border: 1px solid $white;
   padding-left: 31px;
-  margin-bottom: 65px;
 }
 
 .poke-search::placeholder {
