@@ -13,12 +13,12 @@
             <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArr" />
           </div>
           <div class="cards__items">
-            <PokeCard v-for="pokemon in getFilteredPokeArr" :key="pokemon.id" :pokemon="pokemon" />
+            <PokeCard v-for="pokemon in getFilteredPokeArr.slice(0, 9)" :key="pokemon.id" :pokemon="pokemon" />
           </div>
         </div>
         <div class="main-pokedex__buttons">
           <button class="main-pokedex__btn-prev" :disabled="pageNumber === 0" @click="prevPage" />
-          <button class="main-pokedex__btn-next" :disabled="pageNumber >= (getFilteredPokeArr.length / 9) - 1" @click="nextPage" />
+          <button class="main-pokedex__btn-next" :disabled="pageNumber >= (pokemonsArray.length / 9) - 1" @click="nextPage" />
         </div>
       </div>
     </div>
@@ -50,14 +50,10 @@ export default class PokedexPage extends Mixins(routeToPage) {
   typedPokeArr: Array<IPoke> = []
   typeValue: Array<string> = []
   minMaxAttack: { min: number; max: number; arr: Array<IPoke>; } = { min: 5, max: 165, arr: [] }
-  testValue: number = 0
+  pokemonsArray: Array<IPoke> = []
 
   pageNumber: number = 0
   size: number = 9
-
-  get testFunction(): number {
-    return this.testValue + 5;
-  }
 
   get getFilteredPokeArr(): Array<IPoke> {
     const start = this.pageNumber * this.size;
@@ -68,27 +64,35 @@ export default class PokedexPage extends Mixins(routeToPage) {
     const attackArrLength = this.minMaxAttack.arr.length;
 
     if (searchValueLength && !typedValueLength && !attackArrLength) {
-      return this.getSearchedPokeArr(this.fullPokeArr).slice(start, end);
+      this.pokemonsArray = this.getSearchedPokeArr(this.fullPokeArr);
+      return this.pokemonsArray.slice(start, end);
     }
     if (searchValueLength && typedValueLength && !attackArrLength) {
-      return this.getTypedPokeArr(this.searchedPokeArr).slice(start, end);
+      this.pokemonsArray = this.getTypedPokeArr(this.searchedPokeArr);
+      return this.pokemonsArray.slice(start, end);
     }
     if (searchValueLength && typedValueLength && attackArrLength) {
-      return this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr)).slice(start, end);
+      this.pokemonsArray = this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr));
+      return this.pokemonsArray.slice(start, end);
     }
     if (searchValueLength && !typedValueLength && attackArrLength) {
-      return this.getAttackPokeArr(this.searchedPokeArr).slice(start, end);
+      this.pokemonsArray = this.getAttackPokeArr(this.searchedPokeArr);
+      return this.pokemonsArray.slice(start, end);
     }
     if (!searchValueLength && typedValueLength && !attackArrLength) {
-      return this.getTypedPokeArr(this.fullPokeArr).slice(start, end);
+      this.pokemonsArray = this.getTypedPokeArr(this.fullPokeArr);
+      return this.pokemonsArray.slice(start, end);
     }
     if (!searchValueLength && typedValueLength && attackArrLength) {
-      return this.getAttackPokeArr(this.typedPokeArr).slice(start, end);
+      this.pokemonsArray = this.getAttackPokeArr(this.typedPokeArr).slice(start, end);
+      return this.pokemonsArray.slice(start, end);
     }
     if (!searchValueLength && !typedValueLength && attackArrLength) {
-      return this.minMaxAttack.arr.slice(start, end);
+      this.pokemonsArray = this.minMaxAttack.arr.slice(start, end);
+      return this.pokemonsArray.slice(start, end);
     }
-    return this.fullPokeArr.slice(start, end);
+    this.pokemonsArray = this.fullPokeArr;
+    return this.pokemonsArray.slice(start, end);
   }
 
   getSearchedPokeArr(pokeArr: Array<IPoke>): Array<IPoke> | [] {
