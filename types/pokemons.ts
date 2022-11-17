@@ -1,10 +1,25 @@
 export interface IPoke {
+  readonly 'abilities': [{
+    readonly ability: {
+      readonly name: string,
+      readonly url: string
+    }
+  },
+    {
+    readonly ability: {
+      readonly name: string,
+      readonly url: string
+    },
+  },
+    {
+      readonly ability: {
+        readonly name: string,
+        readonly url: string
+      },
+    }]
   readonly 'id': number,
   readonly 'name': string,
-  readonly 'img': {
-    type: string,
-    default: 'https://tsum.by/images/no-photo.png'
-  },
+  readonly 'img': string,
   readonly 'stats': {
     readonly 'hp': number,
     readonly 'attack': number,

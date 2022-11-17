@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form v-if="isDesktop || isTablet">
     <div class="poke-types">
       <div class="poke-types__select-box" @click="showCheckboxes()">
         <select>
@@ -51,15 +51,206 @@
       </div>
     </div>
   </form>
+  <form v-else>
+    <div class="types__filter-items">
+      <div class="types__first-row">
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="fire"
+            >
+            <span>Fire</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="normal"
+            >
+            <span>Normal</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="electric"
+            >
+            <span>Electric</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+      </div>
+      <div class="types__secons-row">
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="fire"
+            >
+            <span>Fire</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="normal"
+            >
+            <span>Normal</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="electric"
+            >
+            <span>Electric</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+      </div>
+      <div class="types__third-row">
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="fire"
+            >
+            <span>Fire</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="normal"
+            >
+            <span>Normal</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="electric"
+            >
+            <span>Electric</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+        <div class="types__item">
+          <label class="types__custom-checkbox">
+            <input
+              v-model="typeValue"
+              type="checkbox"
+              value="water"
+            >
+            <span>Water</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Mixins, Watch } from 'vue-property-decorator';
+import { ResizeMixin } from '@/mixins/resize';
 
 @Component({
   name: 'PokeTypes'
 })
-export default class PokeTypes extends Vue {
+export default class PokeTypes extends Mixins(ResizeMixin) {
   typeValue: Array<string> = []
   expanded = true
   display: string = 'none'
@@ -80,7 +271,7 @@ export default class PokeTypes extends Vue {
     }
   }
 }
-</script>
+</script >
 
 <style lang="scss" scoped>
 .poke-types {
@@ -184,6 +375,11 @@ export default class PokeTypes extends Vue {
   &__custom-checkbox > input:checked + span::before {
     border-color: $dark;
     background-color: $danger;
+  }
+
+  &__filter-items {
+    display: flex;
+    justify-content: space-between;
   }
 }
 

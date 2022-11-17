@@ -1,24 +1,47 @@
 <template>
   <div class="main-pokedex">
-    <div id="shadow-of-body" class="main-pokedex__shadow" @click="hideBurgerMenu" />
+    <div :style="{ display: displayValue }" class="main-pokedex__shadow-card" @click="closeCharactCard" />
+    <div id="shadow-of-body" class="main-pokedex__shadow" @click="hideGoingDownMenu" />
     <div class="main-pokedex__container">
       <div class="main-pokedex__content">
-        <p class="main-pokedex__title">
-          800 <b>Pokemons</b> for you to choose your favorite
-        </p>
-        <PokeSearch class="main-pokedex__search" @search="getSearchedArr" />
+        <div class="main-pokedex__title-wrapper">
+          <p class="main-pokedex__title">
+            800 <b>Pokemons</b> for you to choose your favorite
+          </p>
+        </div>
+        <div class="main-pokedex__search">
+          <PokeSearch @search="getSearchedArr" />
+        </div>
         <div class="main-pokedex__pokemons cards">
-          <div class="cards__filter">
+          <div v-if="screenWidth >= 650" class="cards__filter">
             <PokeTypes class="cards__types" @type="getTypedArr" />
-            <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArr" />
+            <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArrFromAttackComponent" />
+          </div>
+          <div v-else class="cards__filter">
+            <button class="cards__filter-button" @click="showFilterMenu">
+              Filter
+            </button>
           </div>
           <div class="cards__items">
-            <PokeCard v-for="pokemon in getFilteredPokeArr.slice(0, 9)" :key="pokemon.id" :pokemon="pokemon" />
+            <PokeCard
+              v-for="pokemon in getFilteredPokeArr"
+              :key="pokemon.id"
+              :pokemon="pokemon"
+              @click="openPokeCard"
+              @cardClick="cardClick"
+            />
+            <div v-if="isOpened" class="cards__charac">
+              <PokeCharacteristics
+                v-for="cardItem in cardItemArr"
+                :key="cardItem.id"
+                :card-item="cardItem"
+              />
+            </div>
           </div>
         </div>
-        <div class="main-pokedex__buttons">
+        <div v-if="screenWidth > 800" class="main-pokedex__buttons">
           <button class="main-pokedex__btn-prev" :disabled="pageNumber === 0" @click="prevPage" />
-          <button class="main-pokedex__btn-next" :disabled="pageNumber >= (pokemonsArray.length / 9) - 1" @click="nextPage" />
+          <button class="main-pokedex__btn-next" :disabled="pageNumber >= (pokemonsArray.length / changePokeCardsQuantity) - 1" @click="nextPage" />
         </div>
       </div>
     </div>
@@ -32,7 +55,7 @@ import PokeCard from '@/components/PokeCard.vue';
 import PokeTypes from '@/components/PokeTypes.vue';
 import PokeSearch from '@/components/PokeSearch.vue';
 import axios from 'axios';
-import { IItem, IPoke } from '~/types/pokemons';
+import { IItem, IPoke } from '@/types/pokemons';
 
 @Component({
   name: 'PokedexPage',
@@ -49,11 +72,50 @@ export default class PokedexPage extends Mixins(routeToPage) {
   searchValue: string = ''
   typedPokeArr: Array<IPoke> = []
   typeValue: Array<string> = []
-  minMaxAttack: { min: number; max: number; arr: Array<IPoke>; } = { min: 5, max: 165, arr: [] }
+  minMaxAttackFromAttackComponent: { min: number; max: number; arr: Array<IPoke>; } = { min: 5, max: 165, arr: [] }
   pokemonsArray: Array<IPoke> = []
 
   pageNumber: number = 0
   size: number = 9
+
+  isOpened: boolean = false
+  cardItemArr: Array<IPoke> = []
+
+  displayValue: string = ''
+
+  showFilterMenu(): void {
+    const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
+    filterMenuInput!.checked = true;
+    this.shadowOfBodyAndStopScrolling();
+  }
+
+  get changePokeCardsQuantity(): number {
+    if (this.screenWidth > 1300) {
+      const pokeCardsQuantity = this.size = 9;
+      return pokeCardsQuantity;
+    }
+    if (this.screenWidth <= 1300 && this.screenWidth >= 800) {
+      const pokeCardsQuantity = this.size = 6;
+      return pokeCardsQuantity;
+    }
+    const pokeCardsQuantity = this.size = 648;
+    return pokeCardsQuantity;
+  }
+
+  closeCharactCard(): void {
+    this.isOpened = false;
+    this.displayValue = 'none';
+  }
+
+  cardClick(cardId: number): void {
+    this.cardItemArr = this.getFilteredPokeArr.filter((pokeObj: IPoke) => pokeObj.id === cardId);
+    this.isOpened = true;
+  }
+
+  openPokeCard(): void {
+    this.displayValue = 'block';
+    this.shadowOfBodyAndStopScrolling();
+  }
 
   get getFilteredPokeArr(): Array<IPoke> {
     const start = this.pageNumber * this.size;
@@ -61,7 +123,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
     const searchValueLength = this.searchValue.length;
     const typedValueLength = this.typeValue.length;
-    const attackArrLength = this.minMaxAttack.arr.length;
+    const attackArrLength = this.minMaxAttackFromAttackComponent.arr.length;
 
     if (searchValueLength && !typedValueLength && !attackArrLength) {
       this.pokemonsArray = this.getSearchedPokeArr(this.fullPokeArr);
@@ -88,7 +150,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
       return this.pokemonsArray.slice(start, end);
     }
     if (!searchValueLength && !typedValueLength && attackArrLength) {
-      this.pokemonsArray = this.minMaxAttack.arr.slice(start, end);
+      this.pokemonsArray = this.minMaxAttackFromAttackComponent.arr.slice(start, end);
       return this.pokemonsArray.slice(start, end);
     }
     this.pokemonsArray = this.fullPokeArr;
@@ -122,32 +184,10 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   getAttackPokeArr(pokeArr: Array<IPoke>): Array<IPoke> {
     return pokeArr.filter((pokemon: IPoke) => pokemon.stats.attack >=
-        this.minMaxAttack.min &&
+        this.minMaxAttackFromAttackComponent.min &&
         pokemon.stats.attack <=
-        this.minMaxAttack.max);
+        this.minMaxAttackFromAttackComponent.max);
   }
-
-  // Получение финального массива
-  //
-  // get getPokeCard(): Array<object> {
-  //   let data: Array<object> = [];
-  //   const start = this.pageNumber * this.size;
-  //   const end = start + this.size;
-  //   if (this.pokeTypes.length) {
-  //     data = this.fullPokeArr.filter((item) => this.pokeTypes.includes(item.type_1)).slice(start, end);
-  //   } else {
-  //     data = this.fullPokeArr.slice(start, end);
-  //   }
-  //   return data;
-  // }
-  //
-  // Тут повесить финальный массив, который будет
-  //
-  // get getPokeArrLength(): number {
-  //   if (this.pokeTypes.length) {
-  //     return this.fullPokeArr.filter((item) => this.pokeTypes.includes(item.type_1)).length;
-  //   } return this.fullPokeArr.length;
-  // }
 
   nextPage(): void {
     this.pageNumber += 1;
@@ -164,6 +204,11 @@ export default class PokedexPage extends Mixins(routeToPage) {
         getPokeLink.data.results.map((item: IItem) => axios.get(item.url))
       );
       const pokemons: IPoke[] = pokeResponse.map((url: any) => ({
+        abilities: {
+          name_1: url.data.abilities[0].ability.name,
+          name_2: url.data.abilities[1],
+          name_3: url.data.abilities[2]
+        },
         id: url.data.id,
         name: url.data.name,
         img: url.data.sprites.other.dream_world.front_default,
@@ -192,12 +237,13 @@ export default class PokedexPage extends Mixins(routeToPage) {
     this.typeValue = data;
   }
 
-  getAttackArr(data: { min: number; max: number; arr: Array<IPoke>}): void {
-    this.minMaxAttack = data;
+  getAttackArrFromAttackComponent(data: { min: number; max: number; arr: Array<IPoke>}): void {
+    this.minMaxAttackFromAttackComponent = data;
   }
 
-  mounted(): void {
-    this.getFullPokeArr();
+  async mounted(): Promise<void> {
+    this.displayValue = 'none';
+    await this.getFullPokeArr();
   }
 }
 </script>
@@ -220,13 +266,33 @@ export default class PokedexPage extends Mixins(routeToPage) {
     z-index: 99;
   }
 
+  &__shadow-card {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    background: $dark;
+    opacity: 0.5;
+    cursor: pointer;
+    z-index: 100;
+  }
+
   &__container {
     display: flex;
     justify-content: center;
-    padding: 166px 157px 119.5px 158px;
+    padding: 166px 0 119.5px 0;
   }
 
-  &__content {
+  @media (max-width: 650px) and (min-width: 375px) {
+    &__container {
+      padding: 85px 0 119.5px 0;
+    }
+  }
+
+  &__title-wrapper {
+    display: flex;
+    justify-content: center;
   }
 
   &__title {
@@ -239,8 +305,31 @@ export default class PokedexPage extends Mixins(routeToPage) {
     margin-bottom: 33px;
   }
 
+  @media (max-width: 1300px) and (min-width: 375px) {
+    &__title {
+      width: 615px;
+    }
+  }
+
+  @media (max-width: 800px) and (min-width: 375px) {
+    &__title {
+      width: 330px;
+      font-size: 24px;
+      line-height: 28px;
+      margin-bottom: 57px;
+    }
+  }
+
   &__search {
+    display: flex;
+    justify-content: center;
     margin-bottom: 36px;
+  }
+
+  @media (max-width: 800px) and (min-width: 375px) {
+    &__search {
+      margin-bottom: 16px;
+    }
   }
 
   &__buttons {
@@ -278,6 +367,23 @@ export default class PokedexPage extends Mixins(routeToPage) {
       grid-template-rows: 137px 137px 137px;
       column-gap: 34px;
       row-gap: 45px;
+      justify-content: center;
+    }
+
+    @media (max-width: 1300px) and (min-width: 375px) {
+      &__items {
+        grid-template-columns: 352px 352px;
+        grid-template-rows: 137px 137px;
+        column-gap: 19px;
+        row-gap: 24px;
+      }
+    }
+
+    @media (max-width: 800px) and (min-width: 375px) {
+      &__items {
+        grid-template-columns: 337px;
+        grid-template-rows: 140px;
+      }
     }
 
     &__filter {
@@ -285,9 +391,67 @@ export default class PokedexPage extends Mixins(routeToPage) {
       margin-bottom: 53px;
     }
 
+    @media (max-width: 800px) and (min-width: 650px) {
+      &__filter {
+        display: grid;
+        justify-content: center;
+        justify-items: center;
+        margin-bottom: 29px;
+      }
+    }
+
+    @media (max-width: 650px) and (min-width: 375px) {
+      &__filter {
+        display: grid;
+        justify-content: start;
+        margin: 0 0 29px 8px;
+      }
+    }
+
+    &__filter-button {
+      font-family: 'SourceSansPro-Regular', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+      color: $black;
+      width: 77px;
+      height: 20px;
+      border-radius: 8px;
+      background: $white;
+      text-align: left;
+      padding-left: 15px;
+    }
+
+    &__close-icon {
+      display: block;
+      position: absolute;
+      right: 26px;
+      top: 16px;
+      z-index: 1000;
+    }
+
     &__types {
       margin-right: 64px;
     }
+
+    @media (max-width: 800px) and (min-width: 375px) {
+      &__types {
+        margin: 0 0 10px 0;
+      }
+    }
   }
+}
+
+.shadow {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background: $dark;
+  opacity: 0.5;
+  cursor: pointer;
+  z-index: 99;
 }
 </style>

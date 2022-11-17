@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form v-if="isDesktop || isTablet" id="attack-form">
     <div class="poke-attack">
       <div class="poke-attack__select-box" @click="showCheckboxes()">
         <select>
@@ -43,28 +43,69 @@
       </div>
     </div>
   </form>
+  <form v-else>
+    <div class="poke-attack">
+      <div :style="{ display: display }" class="poke-attack__content">
+        <div class="poke-attack__input-box input-box">
+          <div class="input-box__item">
+            <label>
+              <span class="input-box__header">From</span>
+              <input
+                v-model.number="minAttack"
+                class="input-box__input"
+                placeholder="5"
+                type="number"
+              >
+            </label>
+          </div>
+          <div class="input-box__item">
+            <div class="input-box__between" />
+          </div>
+          <div class="input-box__item">
+            <label>
+              <span class="input-box__header">To</span>
+              <input
+                v-model.number="maxAttack"
+                class="input-box__input"
+                placeholder="165"
+                type="number"
+              >
+            </label>
+          </div>
+        </div>
+        <div class="poke-attack__apply">
+          <button class="poke-attack__button" type="button" @click="getAttackPokeArr">
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Watch, Mixins } from 'vue-property-decorator';
+import { ResizeMixin } from '@/mixins/resize';
 
 @Component({
   name: 'PokeAttack'
 })
-export default class PokeAttack extends Vue {
+export default class PokeAttack extends Mixins(ResizeMixin) {
   minAttack: number = 5
   maxAttack: number = 165
   attackPokeArr: Array<any> = []
-  expanded = true
+  expanded = false
   display: string = 'none'
 
-  @Prop({ required: true }) readonly fullPokeArr!: Array<object>
+  @Prop({ required: false }) readonly fullPokeArr!: Array<object>
 
   getAttackPokeArr(): void {
     this.attackPokeArr = this.fullPokeArr.filter((pokemon: any) => pokemon.stats.attack >=
       this.minAttack &&
       pokemon.stats.attack <=
       this.maxAttack);
+    this.display = 'none';
+    this.expanded = false;
   }
 
   @Watch('attackPokeArr')
@@ -85,6 +126,19 @@ export default class PokeAttack extends Vue {
       this.display = 'none';
       this.expanded = false;
     }
+  }
+
+  mounted(): void {
+    if (this.isMobile) {
+      this.display = 'block';
+    }
+    // const formElement = document.getElementById('attack-form');
+    // window.addEventListener('click', (e) => {
+    //   const click = e.composedPath().includes(formElement!);
+    //   if (click) {
+    //     console.log('click outside');
+    //   }
+    // });
   }
 }
 </script>

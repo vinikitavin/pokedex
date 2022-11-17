@@ -1,5 +1,5 @@
 <template>
-  <div class="poke-card">
+  <div class="poke-card" @click="cardClick">
     <div class="poke-card__prop prop">
       <h3 class="prop__name">
         {{ pokeName }}
@@ -42,10 +42,13 @@ import { IPoke } from '~/types/pokemons';
   }
 })
 export default class PokeCard extends Vue {
-  pokeName: string = ''
-  // isImgNotFound: boolean = false
-
   @Prop({ required: true }) readonly pokemon!: IPoke
+
+  pokeName: string = ''
+
+  cardClick(): void {
+    this.$emit('cardClick', this.pokemon.id);
+  }
 
   mounted(): void {
     const firstLetterToUpperCase: string = this.pokemon.name.split('')[0].toUpperCase();
@@ -64,9 +67,16 @@ export default class PokeCard extends Vue {
   border-radius: 8px;
   background: $light-grey;
   filter: drop-shadow(4px 4px 4px rgba(33, 33, 33, 0.1));
+  cursor: pointer;
 
   &__prop {
     padding: 12px 0 0 26px;
+  }
+
+  @media (max-width: 800px) and (min-width: 375px) {
+    &__prop {
+      padding: 5px 0 0 26px;
+    }
   }
 
   .prop {
@@ -120,6 +130,13 @@ export default class PokeCard extends Vue {
     width: 232px;
     top: 0;
     right: 0;
+  }
+}
+
+@media (max-width: 800px) and (min-width: 375px) {
+  .poke-card {
+    width: 337px;
+    height: 140px;
   }
 }
 </style>

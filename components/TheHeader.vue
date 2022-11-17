@@ -6,7 +6,7 @@
         <div class="header__nav nav">
           <ul class="nav__list">
             <li class="nav__item">
-              <NuxtLink class="nav__link nav__link_active" to="/home">
+              <NuxtLink class="nav__link" to="/home">
                 Home
               </NuxtLink>
             </li>
@@ -35,8 +35,7 @@ import { routeToPage } from '@/mixins/routeToPage';
   name: 'TheHeader'
 })
 
-export default class TheHeader extends Mixins(routeToPage) {
-}
+export default class TheHeader extends Mixins(routeToPage) {}
 </script>
 
 <style lang="scss" scoped>
@@ -128,20 +127,20 @@ export default class TheHeader extends Mixins(routeToPage) {
       line-height: 22px;
     }
   }
+}
 
-  &__link_active {
-    position: relative;
-  }
+.nuxt-link-active {
+  position: relative;
+}
 
-  &__link_active:after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 44px;
-    width: 100%;
-    height: 3px;
-    background-color: $dark;
-    border-radius: 5px;
-  }
+.nuxt-link-active:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 44px;
+  width: 100%;
+  height: 3px;
+  background-color: $dark;
+  border-radius: 5px;
 }
 </style>

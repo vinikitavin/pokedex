@@ -1,6 +1,6 @@
 <template>
   <div class="main-home">
-    <div id="shadow-of-body" class="main-home__shadow" @click="hideBurgerMenu" />
+    <div id="shadow-of-body" class="main-home__shadow" @click="hideGoingDownMenu" />
     <div class="main-home__container">
       <div class="main-home__content">
         <div class="main-home__description">

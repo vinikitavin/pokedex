@@ -3,7 +3,7 @@
     <div class="footer__container">
       <div class="footer__content">
         <h5 class="footer__item">
-          Make with ❤️
+          Make with ❤
         </h5>
         <a class="footer__item" href="https://github.com/vinikitavin" target="_blank">
           Ours Team
