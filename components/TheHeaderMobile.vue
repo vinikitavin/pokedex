@@ -61,7 +61,7 @@
               </p>
             </div>
             <div class="attack__attack-component">
-              <PokeAttack />
+              <PokeAttack :full-poke-arr="fullPokeArr" />
             </div>
           </div>
         </ul>
@@ -71,13 +71,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { routeToPage } from '@/mixins/routeToPage';
 
 @Component({
   name: 'TheHeaderMobile'
 })
 export default class TheHeaderMobile extends Mixins(routeToPage) {
+  @Prop({ required: false }) readonly fullPokeArr!: Array<object>
+
   closeFilterMenu(): void {
     const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
     filterMenuInput!.checked = false;

@@ -1,8 +1,8 @@
 <template>
   <div class="website">
     <TheHeader v-if="isDesktop || isTablet" />
-    <TheHeaderMobile v-if="isMobile" />
-    <Nuxt />
+    <TheHeaderMobile v-if="isMobile" :full-poke-arr="fullPokeArr" />
+    <Nuxt @fullPokeArray="getFullPokeArray" />
     <TheFooter />
   </div>
 </template>
@@ -13,6 +13,7 @@ import { ResizeMixin } from '@/mixins/resize';
 import TheHeader from '@/components/TheHeader.vue';
 import TheHeaderMobile from '@/components/TheHeaderMobile.vue';
 import TheFooter from '@/components/TheFooter.vue';
+import { IPoke } from '@/types/pokemons';
 
 @Component({
   name: 'MainPage',
@@ -23,6 +24,12 @@ import TheFooter from '@/components/TheFooter.vue';
   }
 })
 export default class MainPage extends Mixins(ResizeMixin) {
+  fullPokeArr: Array<IPoke> = []
+
+  getFullPokeArray(fullPokeArray: Array<IPoke>): void {
+    this.fullPokeArr = fullPokeArray;
+  }
+
   @Watch('screenWidth')
   private handler(): void {
     this.definedScreenWidth();

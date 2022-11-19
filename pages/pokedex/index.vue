@@ -15,7 +15,7 @@
         <div class="main-pokedex__pokemons cards">
           <div v-if="screenWidth >= 650" class="cards__filter">
             <PokeTypes class="cards__types" />
-            <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArrFromAttackComponent" />
+            <PokeAttack :full-poke-arr="fullPokeArr" />
           </div>
           <div v-else class="cards__filter">
             <button class="cards__filter-button" @click="showFilterMenu">
@@ -58,6 +58,7 @@ import axios from 'axios';
 import { IItem, IPoke } from '@/types/pokemons';
 import { getModule } from 'vuex-module-decorators';
 import SetTypeValue from '@/store/setTypeValue';
+import SetAttackArray from '@/store/setAttackArray';
 
 @Component({
   name: 'PokedexPage',
@@ -74,7 +75,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
   searchValue: string = ''
   typedPokeArr: Array<IPoke> = []
   storeTypeValue: SetTypeValue = getModule(SetTypeValue)
-  minMaxAttackFromAttackComponent: { min: number; max: number; arr: Array<IPoke>; } = { min: 5, max: 165, arr: [] }
+  storeMinMaxAttackArr: SetAttackArray = getModule(SetAttackArray)
   pokemonsArray: Array<IPoke> = []
 
   pageNumber: number = 0
@@ -85,7 +86,12 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   displayValue: string = ''
 
+  emitFullPokeArray(): void {
+    this.$emit('fullPokeArray', this.fullPokeArr);
+  }
+
   showFilterMenu(): void {
+    this.$emit('fullPokeArray', this.fullPokeArr);
     const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
     filterMenuInput!.checked = true;
     this.shadowOfBodyAndStopScrolling();
@@ -125,7 +131,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
     const searchValueLength = this.searchValue.length;
     const typedValueLength = this.storeTypeValue.GetTypeValue.length;
-    const attackArrLength = this.minMaxAttackFromAttackComponent.arr.length;
+    const attackArrLength = this.storeMinMaxAttackArr.GetAttackArray.length;
 
     if (searchValueLength && !typedValueLength && !attackArrLength) {
       this.pokemonsArray = this.getSearchedPokeArr(this.fullPokeArr);
@@ -152,7 +158,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
       return this.pokemonsArray.slice(start, end);
     }
     if (!searchValueLength && !typedValueLength && attackArrLength) {
-      this.pokemonsArray = this.minMaxAttackFromAttackComponent.arr.slice(start, end);
+      this.pokemonsArray = this.storeMinMaxAttackArr.GetAttackArray.slice(start, end);
       return this.pokemonsArray.slice(start, end);
     }
     this.pokemonsArray = this.fullPokeArr;
@@ -186,9 +192,9 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   getAttackPokeArr(pokeArr: Array<IPoke>): Array<IPoke> {
     return pokeArr.filter((pokemon: IPoke) => pokemon.stats.attack >=
-        this.minMaxAttackFromAttackComponent.min &&
+        this.storeMinMaxAttackArr.GetMinAttack &&
         pokemon.stats.attack <=
-        this.minMaxAttackFromAttackComponent.max);
+        this.storeMinMaxAttackArr.GetMaxAttack);
   }
 
   nextPage(): void {
@@ -235,9 +241,9 @@ export default class PokedexPage extends Mixins(routeToPage) {
     this.searchValue = data;
   }
 
-  getAttackArrFromAttackComponent(data: { min: number; max: number; arr: Array<IPoke>}): void {
-    this.minMaxAttackFromAttackComponent = data;
-  }
+  // getAttackArrFromAttackComponent(data: { min: number; max: number; arr: Array<IPoke>}): void {
+  //   this.storeMinMaxAttackArr.GetMinAttack = data;
+  // }
 
   async mounted(): Promise<void> {
     this.displayValue = 'none';

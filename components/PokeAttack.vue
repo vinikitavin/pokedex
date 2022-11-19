@@ -86,6 +86,8 @@
 <script lang="ts">
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator';
 import { ResizeMixin } from '@/mixins/resize';
+import { getModule } from 'vuex-module-decorators';
+import SetAttackArray from '@/store/setAttackArray';
 
 @Component({
   name: 'PokeAttack'
@@ -100,23 +102,28 @@ export default class PokeAttack extends Mixins(ResizeMixin) {
   @Prop({ required: false }) readonly fullPokeArr!: Array<object>
 
   getAttackPokeArr(): void {
+    const storeMinMaxAttackArr = getModule(SetAttackArray);
     this.attackPokeArr = this.fullPokeArr.filter((pokemon: any) => pokemon.stats.attack >=
       this.minAttack &&
       pokemon.stats.attack <=
       this.maxAttack);
     this.display = 'none';
     this.expanded = false;
+
+    storeMinMaxAttackArr.changeMinAttack(this.minAttack);
+    storeMinMaxAttackArr.changeMaxAttack(this.maxAttack);
+    storeMinMaxAttackArr.changeAttackArray(this.attackPokeArr);
   }
 
   @Watch('attackPokeArr')
 
-  attack(): void {
-    this.$emit('attack', {
-      min: this.minAttack,
-      max: this.maxAttack,
-      arr: this.attackPokeArr
-    });
-  }
+  // attack(): void {
+  //   this.$emit('attack', {
+  //     min: this.minAttack,
+  //     max: this.maxAttack,
+  //     arr: this.attackPokeArr
+  //   });
+  // }
 
   showCheckboxes(): void {
     if (!this.expanded) {
