@@ -14,7 +14,7 @@
         </div>
         <div class="main-pokedex__pokemons cards">
           <div v-if="screenWidth >= 650" class="cards__filter">
-            <PokeTypes class="cards__types" @type="getTypedArr" />
+            <PokeTypes class="cards__types" />
             <PokeAttack :full-poke-arr="fullPokeArr" @attack="getAttackArrFromAttackComponent" />
           </div>
           <div v-else class="cards__filter">
@@ -56,6 +56,8 @@ import PokeTypes from '@/components/PokeTypes.vue';
 import PokeSearch from '@/components/PokeSearch.vue';
 import axios from 'axios';
 import { IItem, IPoke } from '@/types/pokemons';
+import { getModule } from 'vuex-module-decorators';
+import SetTypeValue from '@/store/setTypeValue';
 
 @Component({
   name: 'PokedexPage',
@@ -71,7 +73,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
   searchedPokeArr: Array<IPoke> = []
   searchValue: string = ''
   typedPokeArr: Array<IPoke> = []
-  typeValue: Array<string> = []
+  storeTypeValue: SetTypeValue = getModule(SetTypeValue)
   minMaxAttackFromAttackComponent: { min: number; max: number; arr: Array<IPoke>; } = { min: 5, max: 165, arr: [] }
   pokemonsArray: Array<IPoke> = []
 
@@ -122,7 +124,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
     const end = start + this.size;
 
     const searchValueLength = this.searchValue.length;
-    const typedValueLength = this.typeValue.length;
+    const typedValueLength = this.storeTypeValue.GetTypeValue.length;
     const attackArrLength = this.minMaxAttackFromAttackComponent.arr.length;
 
     if (searchValueLength && !typedValueLength && !attackArrLength) {
@@ -169,12 +171,12 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   getTypedPokeArr(pokeArr: Array<IPoke>): Array<IPoke> {
     let data: Array<any> = [];
-    if (this.typeValue.length) {
+    if (this.storeTypeValue.GetTypeValue.length) {
       data = pokeArr.filter((item: IPoke) => {
         if (typeof item.type_2 !== 'undefined') {
-          return this.typeValue.includes(item.type_1) && this.typeValue.includes(item.type_2.type.name);
+          return this.storeTypeValue.GetTypeValue.includes(item.type_1) && this.storeTypeValue.GetTypeValue.includes(item.type_2.type.name);
         }
-        return this.typeValue.includes(item.type_1);
+        return this.storeTypeValue.GetTypeValue.includes(item.type_1);
       });
       this.typedPokeArr = data;
       return data;
@@ -231,10 +233,6 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   getSearchedArr(data: string): void {
     this.searchValue = data;
-  }
-
-  getTypedArr(data: Array<string>): void {
-    this.typeValue = data;
   }
 
   getAttackArrFromAttackComponent(data: { min: number; max: number; arr: Array<IPoke>}): void {
