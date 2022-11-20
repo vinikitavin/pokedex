@@ -247,14 +247,14 @@
 
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator';
-import { ResizeMixin } from '@/mixins/resize';
+import { resizeMixin } from '@/mixins/resize';
 import { getModule } from 'vuex-module-decorators';
 import SetTypeValue from '@/store/setTypeValue';
 
 @Component({
   name: 'PokeTypes'
 })
-export default class PokeTypes extends Mixins(ResizeMixin) {
+export default class PokeTypes extends Mixins(resizeMixin) {
   typeValue: Array<string> = []
   expanded = true
   display: string = 'none'
@@ -336,7 +336,7 @@ export default class PokeTypes extends Mixins(ResizeMixin) {
     box-shadow: 4px 4px 8px rgba(1, 28, 64, 0.2);
     margin-top: 8px;
     padding: 14px 14px 13px 30px;
-    z-index: 999;
+    z-index: 10;
   }
 }
 

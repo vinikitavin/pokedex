@@ -45,7 +45,7 @@
   </form>
   <form v-else>
     <div class="poke-attack">
-      <div :style="{ display: display }" class="poke-attack__content">
+      <div class="poke-attack__content">
         <div class="poke-attack__input-box input-box">
           <div class="input-box__item">
             <label>
@@ -84,20 +84,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, Mixins } from 'vue-property-decorator';
-import { ResizeMixin } from '@/mixins/resize';
+import { Component, Prop, Mixins } from 'vue-property-decorator';
+import { resizeMixin } from '@/mixins/resize';
 import { getModule } from 'vuex-module-decorators';
 import SetAttackArray from '@/store/setAttackArray';
+import { transitions } from '~/mixins/transitions';
 
 @Component({
   name: 'PokeAttack'
 })
-export default class PokeAttack extends Mixins(ResizeMixin) {
+export default class PokeAttack extends Mixins(resizeMixin, transitions) {
   minAttack: number = 5
   maxAttack: number = 165
   attackPokeArr: Array<any> = []
   expanded = false
-  display: string = 'none'
+  display: string = 'block'
 
   @Prop({ required: false }) readonly fullPokeArr!: Array<object>
 
@@ -107,23 +108,19 @@ export default class PokeAttack extends Mixins(ResizeMixin) {
       this.minAttack &&
       pokemon.stats.attack <=
       this.maxAttack);
-    this.display = 'none';
-    this.expanded = false;
+    if (!this.isMobile) {
+      this.display = 'none';
+      this.expanded = false;
+    } else {
+      this.closeFilterMenu();
+    }
 
     storeMinMaxAttackArr.changeMinAttack(this.minAttack);
     storeMinMaxAttackArr.changeMaxAttack(this.maxAttack);
     storeMinMaxAttackArr.changeAttackArray(this.attackPokeArr);
   }
 
-  @Watch('attackPokeArr')
-
-  // attack(): void {
-  //   this.$emit('attack', {
-  //     min: this.minAttack,
-  //     max: this.maxAttack,
-  //     arr: this.attackPokeArr
-  //   });
-  // }
+  // @Watch('attackPokeArr')
 
   showCheckboxes(): void {
     if (!this.expanded) {
@@ -138,7 +135,10 @@ export default class PokeAttack extends Mixins(ResizeMixin) {
   mounted(): void {
     if (this.isMobile) {
       this.display = 'block';
+      this.expanded = true;
     }
+    this.display = 'none';
+    this.expanded = false;
     // const formElement = document.getElementById('attack-form');
     // window.addEventListener('click', (e) => {
     //   const click = e.composedPath().includes(formElement!);
@@ -196,16 +196,14 @@ export default class PokeAttack extends Mixins(ResizeMixin) {
   }
 
   &__content {
-    display: flex;
     position: absolute;
     width: 285px;
-    //height: 105px;
     border-radius: 8px;
     background: $white;
     box-shadow: 4px 4px 8px rgba(1, 28, 64, 0.2);
     margin-top: 8px;
     padding: 13px 23px 15px 12px;
-    z-index: 999;
+    z-index: 10;
   }
 
   &__input-box {

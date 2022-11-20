@@ -71,19 +71,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator';
-import { routeToPage } from '@/mixins/routeToPage';
+import { Component, Mixins } from 'vue-property-decorator';
+import { transitions } from '~/mixins/transitions';
+import { getFullPokeArr } from '@/mixins/getFullPokeArr';
 
 @Component({
   name: 'TheHeaderMobile'
 })
-export default class TheHeaderMobile extends Mixins(routeToPage) {
-  @Prop({ required: false }) readonly fullPokeArr!: Array<object>
-
-  closeFilterMenu(): void {
-    const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
-    filterMenuInput!.checked = false;
-    this.hideGoingDownMenu();
+export default class TheHeaderMobile extends Mixins(transitions, getFullPokeArr) {
+  async mounted(): Promise<void> {
+    await this.getFullPokeArr();
   }
 }
 </script>

@@ -1,7 +1,6 @@
 <template>
   <div class="main-pokedex">
-    <div :style="{ display: displayValue }" class="main-pokedex__shadow-card" @click="closeCharactCard" />
-    <div id="shadow-of-body" class="main-pokedex__shadow" @click="hideGoingDownMenu" />
+    <div id="shadow-of-body" class="main-pokedex__shadow" @click="hideByShadow" />
     <div class="main-pokedex__container">
       <div class="main-pokedex__content">
         <div class="main-pokedex__title-wrapper">
@@ -13,7 +12,7 @@
           <PokeSearch @search="getSearchedArr" />
         </div>
         <div class="main-pokedex__pokemons cards">
-          <div v-if="screenWidth >= 650" class="cards__filter">
+          <div v-if="screenWidth >= 750" class="cards__filter">
             <PokeTypes class="cards__types" />
             <PokeAttack :full-poke-arr="fullPokeArr" />
           </div>
@@ -39,7 +38,7 @@
             </div>
           </div>
         </div>
-        <div v-if="screenWidth > 800" class="main-pokedex__buttons">
+        <div v-if="screenWidth > 750" class="main-pokedex__buttons">
           <button class="main-pokedex__btn-prev" :disabled="pageNumber === 0" @click="prevPage" />
           <button class="main-pokedex__btn-next" :disabled="pageNumber >= (pokemonsArray.length / changePokeCardsQuantity) - 1" @click="nextPage" />
         </div>
@@ -50,15 +49,15 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
-import { routeToPage } from '@/mixins/routeToPage';
+import { transitions } from '~/mixins/transitions';
 import PokeCard from '@/components/PokeCard.vue';
 import PokeTypes from '@/components/PokeTypes.vue';
 import PokeSearch from '@/components/PokeSearch.vue';
-import axios from 'axios';
-import { IItem, IPoke } from '@/types/pokemons';
+import { IPoke } from '@/types/pokemons';
 import { getModule } from 'vuex-module-decorators';
 import SetTypeValue from '@/store/setTypeValue';
 import SetAttackArray from '@/store/setAttackArray';
+import { getFullPokeArr } from '@/mixins/getFullPokeArr';
 
 @Component({
   name: 'PokedexPage',
@@ -69,8 +68,7 @@ import SetAttackArray from '@/store/setAttackArray';
     PokeSearch
   }
 })
-export default class PokedexPage extends Mixins(routeToPage) {
-  fullPokeArr: Array<IPoke> = []
+export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
   searchedPokeArr: Array<IPoke> = []
   searchValue: string = ''
   typedPokeArr: Array<IPoke> = []
@@ -84,14 +82,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
   isOpened: boolean = false
   cardItemArr: Array<IPoke> = []
 
-  displayValue: string = ''
-
-  emitFullPokeArray(): void {
-    this.$emit('fullPokeArray', this.fullPokeArr);
-  }
-
   showFilterMenu(): void {
-    this.$emit('fullPokeArray', this.fullPokeArr);
     const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
     filterMenuInput!.checked = true;
     this.shadowOfBodyAndStopScrolling();
@@ -99,20 +90,19 @@ export default class PokedexPage extends Mixins(routeToPage) {
 
   get changePokeCardsQuantity(): number {
     if (this.screenWidth > 1300) {
-      const pokeCardsQuantity = this.size = 9;
-      return pokeCardsQuantity;
+      this.size = 9;
+      return 9;
     }
-    if (this.screenWidth <= 1300 && this.screenWidth >= 800) {
-      const pokeCardsQuantity = this.size = 6;
-      return pokeCardsQuantity;
+    if (this.screenWidth <= 1300 && this.screenWidth >= 768) {
+      this.size = 6;
+      return 6;
     }
-    const pokeCardsQuantity = this.size = 648;
-    return pokeCardsQuantity;
+    this.size = 648;
+    return 648;
   }
 
   closeCharactCard(): void {
     this.isOpened = false;
-    this.displayValue = 'none';
   }
 
   cardClick(cardId: number): void {
@@ -121,7 +111,6 @@ export default class PokedexPage extends Mixins(routeToPage) {
   }
 
   openPokeCard(): void {
-    this.displayValue = 'block';
     this.shadowOfBodyAndStopScrolling();
   }
 
@@ -133,34 +122,93 @@ export default class PokedexPage extends Mixins(routeToPage) {
     const typedValueLength = this.storeTypeValue.GetTypeValue.length;
     const attackArrLength = this.storeMinMaxAttackArr.GetAttackArray.length;
 
-    if (searchValueLength && !typedValueLength && !attackArrLength) {
+    console.log('до 1');
+    if (searchValueLength && !typedValueLength && !attackArrLength) { // 1 // +++++++++++++++++++++++++++++++++++++++++++++++
+      console.log('1');
       this.pokemonsArray = this.getSearchedPokeArr(this.fullPokeArr);
       return this.pokemonsArray.slice(start, end);
     }
+    console.log('до 1-2');
     if (searchValueLength && typedValueLength && !attackArrLength) {
-      this.pokemonsArray = this.getTypedPokeArr(this.searchedPokeArr);
+      if (this.getSearchedPokeArr(this.typedPokeArr).length) { // 21 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        console.log('21');
+        this.pokemonsArray = this.getSearchedPokeArr(this.typedPokeArr);
+        return this.pokemonsArray.slice(start, end);
+      }
+      if (this.getTypedPokeArr(this.getSearchedPokeArr(this.fullPokeArr)).length) { // 12 // ++++++++++++++++++++++++++++++++++
+        console.log('12');
+        this.pokemonsArray = this.getTypedPokeArr(this.getSearchedPokeArr(this.fullPokeArr));
+        return this.pokemonsArray.slice(start, end);
+      }
+    }
+    console.log('до 1-3');
+    if (searchValueLength && !typedValueLength && attackArrLength) { // 13 // 31 // +++++++++++++++++++++++++++++++++++++++
+      if (this.getAttackPokeArr(this.searchedPokeArr).length) {
+        console.log('13');
+        this.pokemonsArray = this.getAttackPokeArr(this.searchedPokeArr);
+        return this.pokemonsArray.slice(start, end);
+      }
+      console.log('31');
+      this.pokemonsArray = this.getSearchedPokeArr(this.storeMinMaxAttackArr.GetAttackArray);
       return this.pokemonsArray.slice(start, end);
     }
-    if (searchValueLength && typedValueLength && attackArrLength) {
-      this.pokemonsArray = this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr));
-      return this.pokemonsArray.slice(start, end);
-    }
-    if (searchValueLength && !typedValueLength && attackArrLength) {
-      this.pokemonsArray = this.getAttackPokeArr(this.searchedPokeArr);
-      return this.pokemonsArray.slice(start, end);
-    }
+    console.log('до 2');
     if (!searchValueLength && typedValueLength && !attackArrLength) {
+      console.log('2');
       this.pokemonsArray = this.getTypedPokeArr(this.fullPokeArr);
       return this.pokemonsArray.slice(start, end);
     }
-    if (!searchValueLength && typedValueLength && attackArrLength) {
-      this.pokemonsArray = this.getAttackPokeArr(this.typedPokeArr).slice(start, end);
+    console.log('до 2-3');
+    if (!searchValueLength && typedValueLength && attackArrLength) { // 23 // 32 // +++++++++++++++++++++++++++++++++++++++++
+      if (this.getAttackPokeArr(this.typedPokeArr).length) {
+        console.log('23');
+        this.pokemonsArray = this.getAttackPokeArr(this.typedPokeArr);
+        return this.pokemonsArray.slice(start, end);
+      }
+      console.log('32');
+      this.pokemonsArray = this.getTypedPokeArr(this.storeMinMaxAttackArr.GetAttackArray);
       return this.pokemonsArray.slice(start, end);
     }
+    console.log('до 3');
     if (!searchValueLength && !typedValueLength && attackArrLength) {
-      this.pokemonsArray = this.storeMinMaxAttackArr.GetAttackArray.slice(start, end);
+      console.log('3');
+      this.pokemonsArray = this.storeMinMaxAttackArr.GetAttackArray;
       return this.pokemonsArray.slice(start, end);
     }
+    console.log('до 1-2-3');
+    if (searchValueLength && typedValueLength && attackArrLength) {
+      if (this.getAttackPokeArr(this.getSearchedPokeArr(this.typedPokeArr)).length) { // 213 // +++++++++++++++++++++++++++++++++
+        console.log('213');
+        this.pokemonsArray = this.getAttackPokeArr(this.getSearchedPokeArr(this.typedPokeArr));
+        return this.pokemonsArray.slice(start, end);
+      }
+      if (this.getTypedPokeArr(this.getSearchedPokeArr(this.storeMinMaxAttackArr.GetAttackArray)).length) { // 312 // +++++++++++++
+        console.log('312');
+        this.pokemonsArray = this.getTypedPokeArr(this.getSearchedPokeArr(this.storeMinMaxAttackArr.GetAttackArray));
+        return this.pokemonsArray.slice(start, end);
+      }
+      if (this.getTypedPokeArr(this.getAttackPokeArr(this.searchedPokeArr)).length) { // 132 // +++++++++++++++++++++++++++++++++++
+        console.log('132');
+        this.pokemonsArray = this.getTypedPokeArr(this.getSearchedPokeArr(this.storeMinMaxAttackArr.GetAttackArray));
+        return this.pokemonsArray.slice(start, end);
+      }
+      if (this.getSearchedPokeArr(this.getTypedPokeArr(this.storeMinMaxAttackArr.GetAttackArray)).length) { // 321 // ++++++++------
+        console.log('321');
+        this.pokemonsArray = this.getSearchedPokeArr(this.getTypedPokeArr(this.storeMinMaxAttackArr.GetAttackArray));
+        return this.pokemonsArray.slice(start, end);
+      }
+      if (this.getSearchedPokeArr(this.getAttackPokeArr(this.typedPokeArr)).length) { // 231 // +++++++++++++++++----------------------
+        console.log('231');
+        this.pokemonsArray = this.getSearchedPokeArr(this.getAttackPokeArr(this.typedPokeArr));
+        return this.pokemonsArray.slice(start, end);
+      }
+      if (this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr)).length) { // 123 // ++++++++++++++++++++++++++++++++
+        console.log('123');
+        this.pokemonsArray = this.getAttackPokeArr(this.getTypedPokeArr(this.searchedPokeArr));
+        return this.pokemonsArray.slice(start, end);
+      }
+    }
+    console.log('до full');
     this.pokemonsArray = this.fullPokeArr;
     return this.pokemonsArray.slice(start, end);
   }
@@ -205,37 +253,37 @@ export default class PokedexPage extends Mixins(routeToPage) {
     this.pageNumber -= 1;
   }
 
-  async getFullPokeArr(): Promise<void> {
-    try {
-      const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=648&offset=0');
-      const pokeResponse = await Promise.all(
-        getPokeLink.data.results.map((item: IItem) => axios.get(item.url))
-      );
-      const pokemons: IPoke[] = pokeResponse.map((url: any) => ({
-        abilities: {
-          name_1: url.data.abilities[0].ability.name,
-          name_2: url.data.abilities[1],
-          name_3: url.data.abilities[2]
-        },
-        id: url.data.id,
-        name: url.data.name,
-        img: url.data.sprites.other.dream_world.front_default,
-        stats: {
-          hp: { ...url.data.stats }[0].base_stat,
-          attack: { ...url.data.stats }[1].base_stat,
-          defense: { ...url.data.stats }[2].base_stat,
-          special_attack: { ...url.data.stats }[3].base_stat,
-          special_defense: { ...url.data.stats }[4].base_stat,
-          speed: { ...url.data.stats }[5].base_stat
-        },
-        type_1: { ...url.data.types }[0].type.name,
-        type_2: { ...url.data.types }[1]
-      }));
-      this.fullPokeArr = pokemons;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // async getFullPokeArr(): Promise<void> {
+  //   try {
+  //     const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=648&offset=0');
+  //     const pokeResponse = await Promise.all(
+  //       getPokeLink.data.results.map((item: IItem) => axios.get(item.url))
+  //     );
+  //     const pokemons: IPoke[] = pokeResponse.map((url: any) => ({
+  //       abilities: {
+  //         name_1: url.data.abilities[0].ability.name,
+  //         name_2: url.data.abilities[1],
+  //         name_3: url.data.abilities[2]
+  //       },
+  //       id: url.data.id,
+  //       name: url.data.name,
+  //       img: url.data.sprites.other.dream_world.front_default,
+  //       stats: {
+  //         hp: { ...url.data.stats }[0].base_stat,
+  //         attack: { ...url.data.stats }[1].base_stat,
+  //         defense: { ...url.data.stats }[2].base_stat,
+  //         special_attack: { ...url.data.stats }[3].base_stat,
+  //         special_defense: { ...url.data.stats }[4].base_stat,
+  //         speed: { ...url.data.stats }[5].base_stat
+  //       },
+  //       type_1: { ...url.data.types }[0].type.name,
+  //       type_2: { ...url.data.types }[1]
+  //     }));
+  //     this.fullPokeArr = pokemons;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   getSearchedArr(data: string): void {
     this.searchValue = data;
@@ -246,7 +294,6 @@ export default class PokedexPage extends Mixins(routeToPage) {
   // }
 
   async mounted(): Promise<void> {
-    this.displayValue = 'none';
     await this.getFullPokeArr();
   }
 }
@@ -374,7 +421,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
       justify-content: center;
     }
 
-    @media (max-width: 1300px) and (min-width: 375px) {
+    @media (max-width: 1300px) and (min-width: 750px) {
       &__items {
         grid-template-columns: 352px 352px;
         grid-template-rows: 137px 137px;
@@ -383,7 +430,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
       }
     }
 
-    @media (max-width: 800px) and (min-width: 375px) {
+    @media (max-width: 750px) and (min-width: 375px) {
       &__items {
         grid-template-columns: 337px;
         grid-template-rows: 140px;
@@ -395,7 +442,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
       margin-bottom: 53px;
     }
 
-    @media (max-width: 800px) and (min-width: 650px) {
+    @media (max-width: 750px) and (min-width: 650px) {
       &__filter {
         display: grid;
         justify-content: center;
@@ -438,7 +485,7 @@ export default class PokedexPage extends Mixins(routeToPage) {
       margin-right: 64px;
     }
 
-    @media (max-width: 800px) and (min-width: 375px) {
+    @media (max-width: 750px) and (min-width: 375px) {
       &__types {
         margin: 0 0 10px 0;
       }

@@ -14,11 +14,11 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop } from 'vue-property-decorator';
-import { ResizeMixin } from '~/mixins/resize';
+import { resizeMixin } from '~/mixins/resize';
 import { IPoke } from '~/types/pokemons';
 
 @Component
-export default class NavButton extends Mixins(ResizeMixin) {
+export default class NavButton extends Mixins(resizeMixin) {
   buttonTypes: { button__nav: boolean, button__type: boolean } = {
     button__nav: true,
     button__type: false

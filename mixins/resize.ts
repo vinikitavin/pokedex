@@ -2,7 +2,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { vueWindowSizeMixin } from 'vue-window-size';
 
 @Component
-export class ResizeMixin extends Vue {
+export class resizeMixin extends Vue {
   protected isDesktop = false
   protected isTablet = false
   protected isMobile = false

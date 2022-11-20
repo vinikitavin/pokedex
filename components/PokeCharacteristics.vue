@@ -74,13 +74,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Mixins } from 'vue-property-decorator';
 import { IPoke } from '@/types/pokemons';
+import { transitions } from '~/mixins/transitions';
 
 @Component({
   name: 'PokeCharacteristics'
 })
-export default class PokeCharacteristics extends Vue {
+export default class PokeCharacteristics extends Mixins(transitions) {
   pokeCharactBackground: string = ''
   pokeName: string = ''
 
@@ -140,16 +141,7 @@ export default class PokeCharacteristics extends Vue {
     }
   }
 
-  closeCharacCard(): void {
-
-  }
-
-  shadowOfBodyAndStopScrolling(): void {
-    const bodyScrollHidden: HTMLElement | null = document.querySelector('body');
-    const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
-    shadowOfTheMain!.style.display = 'block';
-    bodyScrollHidden!.style.overflow = 'hidden';
-  }
+  closeCharacCard(): void {}
 
   mounted(): void {
     this.shadowOfBodyAndStopScrolling();

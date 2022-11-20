@@ -11,7 +11,7 @@ import { store } from '@/store';
 export default class SetAttackArray extends VuexModule {
   storeMinAttack: number = 5
   storeMaxAttack: number = 165
-  storeAttackArray: Array<string> = []
+  storeAttackArray: Array<any> = []
 
   get GetMinAttack(): number {
     return this.storeMinAttack;
@@ -21,7 +21,7 @@ export default class SetAttackArray extends VuexModule {
     return this.storeMaxAttack;
   }
 
-  get GetAttackArray(): Array<string> {
+  get GetAttackArray(): Array<any> {
     return this.storeAttackArray;
   }
 
@@ -36,7 +36,7 @@ export default class SetAttackArray extends VuexModule {
   }
 
   @Mutation
-  setAttackArray(attackArray: Array<string>): void {
+  setAttackArray(attackArray: Array<any>): void {
     this.storeAttackArray = attackArray;
   }
 
@@ -51,7 +51,7 @@ export default class SetAttackArray extends VuexModule {
   }
 
   @Action
-  changeAttackArray(attackArray: Array<string>): void {
+  changeAttackArray(attackArray: Array<any>): void {
     this.setAttackArray(attackArray);
   }
 }

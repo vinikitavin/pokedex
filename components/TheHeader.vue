@@ -29,13 +29,13 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
-import { routeToPage } from '@/mixins/routeToPage';
+import { transitions } from '~/mixins/transitions';
 
 @Component({
   name: 'TheHeader'
 })
 
-export default class TheHeader extends Mixins(routeToPage) {}
+export default class TheHeader extends Mixins(transitions) {}
 </script>
 
 <style lang="scss" scoped>

@@ -1,9 +1,15 @@
 import { Component, Mixins } from 'vue-property-decorator';
-import { ResizeMixin } from '~/mixins/resize';
+import { resizeMixin } from '~/mixins/resize';
 
 @Component
-export class routeToPage extends Mixins(ResizeMixin) {
-  hideGoingDownMenu(): void {
+export class transitions extends Mixins(resizeMixin) {
+  closeFilterMenu(): void {
+    const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
+    filterMenuInput!.checked = false;
+    this.hideByShadow();
+  }
+
+  hideByShadow(): void {
     const burgerMenuInput = document.getElementById('side-menu') as HTMLElement | null;
     const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
 
@@ -33,7 +39,7 @@ export class routeToPage extends Mixins(ResizeMixin) {
 
   routeToPagesByNuxtLink(): void {
     if (this.isMobile) {
-      this.hideGoingDownMenu();
+      this.hideByShadow();
     }
   }
 
@@ -41,7 +47,7 @@ export class routeToPage extends Mixins(ResizeMixin) {
     const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
     if (this.isMobile) {
       if (shadowOfTheMain!.style.display === 'block') {
-        this.hideGoingDownMenu();
+        this.hideByShadow();
         this.$router.push('/home');
       }
       this.$router.push('/home');

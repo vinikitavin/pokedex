@@ -35,14 +35,14 @@ export default class PokeSearch extends Vue {
   padding-left: 31px;
 }
 
-@media (max-width: 1300px) and (min-width: 375px) {
+@media (max-width: 1300px) and (min-width: 750px) {
   .poke-search {
     height: 36px;
     width: 723px;
   }
 }
 
-@media (max-width: 800px) and (min-width: 375px) {
+@media (max-width: 750px) and (min-width: 375px) {
   .poke-search {
     height: 31px;
     width: 322px;

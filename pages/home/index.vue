@@ -1,6 +1,6 @@
 <template>
   <div class="main-home">
-    <div id="shadow-of-body" class="main-home__shadow" @click="hideGoingDownMenu" />
+    <div id="shadow-of-body" class="main-home__shadow" @click="hideByShadow" />
     <div class="main-home__container">
       <div class="main-home__content">
         <div class="main-home__description">
@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 import NavButton from '@/components/NavButton.vue';
-import { routeToPage } from '@/mixins/routeToPage';
+import { transitions } from '~/mixins/transitions';
 
 @Component({
   name: 'HomePage',
@@ -32,7 +32,7 @@ import { routeToPage } from '@/mixins/routeToPage';
     NavButton
   }
 })
-export default class HomePage extends Mixins(routeToPage) {
+export default class HomePage extends Mixins(transitions) {
   routeToPokedexPage(): void {
     this.$router.push('/pokedex');
   }
