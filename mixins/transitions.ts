@@ -3,6 +3,8 @@ import { resizeMixin } from '~/mixins/resize';
 
 @Component
 export class transitions extends Mixins(resizeMixin) {
+  isOpenedPokeCharactCard: boolean = false
+
   closeFilterMenu(): void {
     const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
     filterMenuInput!.checked = false;
@@ -21,12 +23,20 @@ export class transitions extends Mixins(resizeMixin) {
       bodyScrollHidden!.style.overflow = 'auto';
     }
 
-    if (burgerMenuInput!.checked === true) {
-      burgerMenuInput!.checked = false;
-      setTimeout(hideShadow, 200);
-    } else {
-      filterMenuInput!.checked = false;
-      setTimeout(hideShadow, 200);
+    hideShadow();
+
+    if (this.isMobile) {
+      if (burgerMenuInput!.checked === true) {
+        burgerMenuInput!.checked = false;
+        setTimeout(hideShadow, 200);
+      } else {
+        filterMenuInput!.checked = false;
+        setTimeout(hideShadow, 200);
+      }
+    }
+
+    if (this.isOpenedPokeCharactCard) {
+      this.isOpenedPokeCharactCard = false;
     }
   }
 

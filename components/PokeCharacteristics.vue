@@ -86,6 +86,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   pokeName: string = ''
 
   @Prop({ required: true }) readonly cardItem!: IPoke
+  @Prop({ required: true }) readonly closeCharactCard!: Function
 
   setColorToCharactPokeCard(): void {
     if (this.cardItem.type_1 === 'fire') {
@@ -141,7 +142,13 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     }
   }
 
-  closeCharacCard(): void {}
+  sendCloseCharacFunction(): void {
+    this.$emit('close', this.closeCharacCard);
+  }
+
+  closeCharacCard(): void {
+    this.closeCharactCard();
+  }
 
   mounted(): void {
     this.shadowOfBodyAndStopScrolling();

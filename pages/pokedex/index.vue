@@ -26,13 +26,13 @@
               v-for="pokemon in getFilteredPokeArr"
               :key="pokemon.id"
               :pokemon="pokemon"
-              @click="openPokeCard"
               @cardClick="cardClick"
             />
-            <div v-if="isOpened" class="cards__charac">
+            <div v-if="isOpenedPokeCharactCard" class="cards__charac">
               <PokeCharacteristics
                 v-for="cardItem in cardItemArr"
                 :key="cardItem.id"
+                :close-charact-card="closeCharactCard"
                 :card-item="cardItem"
               />
             </div>
@@ -79,7 +79,6 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
   pageNumber: number = 0
   size: number = 9
 
-  isOpened: boolean = false
   cardItemArr: Array<IPoke> = []
 
   showFilterMenu(): void {
@@ -102,15 +101,13 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
   }
 
   closeCharactCard(): void {
-    this.isOpened = false;
+    this.isOpenedPokeCharactCard = false;
+    this.hideByShadow();
   }
 
   cardClick(cardId: number): void {
     this.cardItemArr = this.getFilteredPokeArr.filter((pokeObj: IPoke) => pokeObj.id === cardId);
-    this.isOpened = true;
-  }
-
-  openPokeCard(): void {
+    this.isOpenedPokeCharactCard = true;
     this.shadowOfBodyAndStopScrolling();
   }
 
@@ -313,7 +310,6 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
     width: 100vw;
     background: $dark;
     opacity: 0.5;
-    cursor: pointer;
     z-index: 99;
   }
 
