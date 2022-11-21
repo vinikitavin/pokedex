@@ -28,14 +28,16 @@
               :pokemon="pokemon"
               @cardClick="cardClick"
             />
-            <div v-if="isOpenedPokeCharactCard" class="cards__charac">
-              <PokeCharacteristics
-                v-for="cardItem in cardItemArr"
-                :key="cardItem.id"
-                :close-charact-card="closeCharactCard"
-                :card-item="cardItem"
-              />
-            </div>
+            <transition name="fade">
+              <div v-if="isOpenedPokeCharactCard" class="cards__charac">
+                <PokeCharacteristics
+                  v-for="cardItem in cardItemArr"
+                  :key="cardItem.id"
+                  :close-charact-card="closeCharactCard"
+                  :card-item="cardItem"
+                />
+              </div>
+            </transition>
           </div>
         </div>
         <div v-if="screenWidth > 750" class="main-pokedex__buttons">
@@ -500,5 +502,12 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
   opacity: 0.5;
   cursor: pointer;
   z-index: 99;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
