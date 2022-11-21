@@ -14,7 +14,7 @@ export class getFullPokeArr extends Vue {
       );
       const pokemons: IPoke[] = pokeResponse.map((url: any) => ({
         abilities: {
-          name_1: url.data.abilities[0].ability.name,
+          name_1: url.data.abilities[0],
           name_2: url.data.abilities[1],
           name_3: url.data.abilities[2]
         },

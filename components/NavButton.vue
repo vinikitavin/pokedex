@@ -14,11 +14,12 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop } from 'vue-property-decorator';
-import { resizeMixin } from '~/mixins/resize';
-import { IPoke } from '~/types/pokemons';
+import { resizeMixin } from '@/mixins/resize';
+import { IPoke } from '@/types/pokemons';
+import { transitions } from '@/mixins/transitions';
 
 @Component
-export default class NavButton extends Mixins(resizeMixin) {
+export default class NavButton extends Mixins(resizeMixin, transitions) {
   buttonTypes: { button__nav: boolean, button__type: boolean } = {
     button__nav: true,
     button__type: false
@@ -43,13 +44,9 @@ export default class NavButton extends Mixins(resizeMixin) {
       this.isNav = false;
 
       if (typeof this.cardItem === 'undefined') {
-        const firstLetterToUpperCase: string = this.pokemon.type_1.split('')[0].toUpperCase();
-        const restPartOfTheWord: string = this.pokemon.type_1.slice(1);
-        this.typeOneName = firstLetterToUpperCase + restPartOfTheWord;
+        this.typeOneName = this.firstCursiveLetter(this.pokemon.type_1);
       } else {
-        const firstLetterToUpperCase: string = this.cardItem.type_1.split('')[0].toUpperCase();
-        const restPartOfTheWord: string = this.cardItem.type_1.slice(1);
-        this.typeOneName = firstLetterToUpperCase + restPartOfTheWord;
+        this.typeOneName = this.firstCursiveLetter(this.cardItem.type_1);
       }
     }
   }

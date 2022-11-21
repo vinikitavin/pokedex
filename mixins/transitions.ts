@@ -5,6 +5,12 @@ import { resizeMixin } from '~/mixins/resize';
 export class transitions extends Mixins(resizeMixin) {
   isOpenedPokeCharactCard: boolean = false
 
+  firstCursiveLetter(word: string): string {
+    const firstLetterToUpperCase: string = word.split('')[0].toUpperCase();
+    const restPartOfTheWord: string = word.slice(1);
+    return firstLetterToUpperCase + restPartOfTheWord;
+  }
+
   closeFilterMenu(): void {
     const filterMenuInput = document.getElementById('filter-menu') as HTMLElement | null;
     filterMenuInput!.checked = false;

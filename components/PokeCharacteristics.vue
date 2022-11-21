@@ -12,7 +12,7 @@
       </div>
       <div class="poke-charact__data">
         <div class="poke-charact__name-gen-id">
-          <div class="poke-charact__name">
+          <div :style="{ fontSize: nameSize }" class="poke-charact__name">
             {{ pokeName }}
           </div>
           <div class="poke-charact__gen-id">
@@ -29,17 +29,43 @@
             <div class="poke-charact__abilities-head">
               Abilities
             </div>
-            <div class="poke-charact__abilities-names">
-              {{ cardItem.abilities[0] }}
+            <div v-if="isFirstAbility && !isSecondAbility && !isThirdAbility" class="poke-charact__abilities-names">
+              {{ firstAbilityName }}
+            </div>
+            <div v-if="isFirstAbility && isSecondAbility && !isThirdAbility" class="poke-charact__abilities-names">
+              {{ firstAbilityName }} - {{ secondAbilityName }}
+            </div>
+            <div v-if="isFirstAbility && isSecondAbility && isThirdAbility" class="poke-charact__abilities-names">
+              {{ firstAbilityName }} - {{ secondAbilityName }} - {{ thirdAbilityName }}
             </div>
           </div>
         </div>
         <div class="poke-charact__hp-speed">
           <div class="poke-charact__hp">
-            {{ cardItem.stats.hp }}
+            <p class="poke-charact__hp-head">
+              Healthy Points
+            </p>
+            <p class="poke-charact__hp-name">
+              {{ hpQuantity }}
+            </p>
+            <div class="poke-charact__hp-body">
+              <transition name="hp">
+                <div v-if="hpWidth" :style="{ width: `${hpWidth}px` }" class="poke-charact__hp-value" />
+              </transition>
+            </div>
           </div>
           <div class="poke-charact__speed">
-            {{ cardItem.stats.speed }}
+            <p class="poke-charact__speed-head">
+              Speed
+            </p>
+            <p class="poke-charact__speed-name">
+              {{ speedQuantity }}
+            </p>
+            <div class="poke-charact__speed-body">
+              <transition name="speed">
+                <div v-if="speedWidth" :style="{ width: `${speedWidth}px` }" class="poke-charact__speed-value" />
+              </transition>
+            </div>
           </div>
         </div>
         <div class="poke-charact__stats">
@@ -84,9 +110,80 @@ import { transitions } from '~/mixins/transitions';
 export default class PokeCharacteristics extends Mixins(transitions) {
   pokeCharactBackground: string = ''
   pokeName: string = ''
+  firstAbilityName: string = ''
+  secondAbilityName: string = ''
+  thirdAbilityName: string = ''
+
+  isFirstAbility: boolean = false
+  isSecondAbility: boolean = false
+  isThirdAbility: boolean = false
+
+  hpWidth: string = ''
+  speedWidth: string = ''
+
+  hpQuantity: any = 0
+  speedQuantity: any = 0
+
+  nameSize: string = ''
 
   @Prop({ required: true }) readonly cardItem!: IPoke
   @Prop({ required: true }) readonly closeCharactCard!: Function
+
+  setPokeNameFontSize(): void {
+    if (this.cardItem.name.length >= 12) {
+      this.nameSize = '22px';
+    } else {
+      this.nameSize = '36px';
+    }
+  }
+
+  speedCounter(): void {
+    window.setInterval(() => {
+      if (this.speedQuantity !== this.cardItem.stats.speed) {
+        this.speedQuantity += 1;
+      }
+    }, 10);
+  }
+
+  hpCounter(): void {
+    window.setInterval(() => {
+      if (this.hpQuantity !== this.cardItem.stats.hp) {
+        this.hpQuantity += 1;
+      }
+    }, 10);
+  }
+
+  setHpLine(): void {
+    this.hpWidth = String(this.cardItem.stats.hp);
+  }
+
+  setSpeedLine(): void {
+    this.speedWidth = String(this.cardItem.stats.speed);
+  }
+
+  setAbilities(): void {
+    if (typeof this.cardItem.abilities.name_1 !== 'undefined') {
+      this.firstAbilityName = this.firstCursiveLetter(this.cardItem.abilities.name_1.ability.name);
+      this.isFirstAbility = true;
+    } else {
+      this.firstAbilityName = '';
+      this.isFirstAbility = false;
+    }
+    if (typeof this.cardItem.abilities.name_2 !== 'undefined') {
+      this.secondAbilityName = this.firstCursiveLetter(this.cardItem.abilities.name_2.ability.name);
+      this.isSecondAbility = true;
+    } else {
+      this.secondAbilityName = '';
+      this.isSecondAbility = false;
+    }
+    if (typeof this.cardItem.abilities.name_3 !== 'undefined') {
+      this.thirdAbilityName = this.firstCursiveLetter(this.cardItem.abilities.name_3.ability.name);
+      this.isThirdAbility = true;
+    } else {
+      this.thirdAbilityName = '';
+      this.isThirdAbility = false;
+    }
+  }
 
   setColorToCharactPokeCard(): void {
     if (this.cardItem.type_1 === 'fire') {
@@ -153,9 +250,13 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   mounted(): void {
     this.shadowOfBodyAndStopScrolling();
     this.setColorToCharactPokeCard();
-    const firstLetterToUpperCase: string = this.cardItem.name.split('')[0].toUpperCase();
-    const restPartOfTheWord: string = this.cardItem.name.slice(1);
-    this.pokeName = firstLetterToUpperCase + restPartOfTheWord;
+    this.setAbilities();
+    this.setHpLine();
+    this.setSpeedLine();
+    this.hpCounter();
+    this.speedCounter();
+    this.setPokeNameFontSize();
+    this.pokeName = this.firstCursiveLetter(this.cardItem.name);
   }
 }
 </script>
@@ -247,7 +348,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   &__name {
     font-family: 'Karla-Bold', sans-serif;
     font-weight: 700;
-    font-size: 36px;
+    //font-size: 36px;
     line-height: 42px;
     color: $white-light;
   }
@@ -258,7 +359,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   &__abilities {
     height: 60px;
-    width: 264px;
+    max-width: 401px;
     border-radius: 8px;
     background: $white-light;
     box-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
@@ -269,7 +370,8 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     padding: 12px 0 10px 28px;
   }
 
-  &__abilities-head {
+  &__abilities-head,
+  &__abilities-names {
     font-family: 'Karla-Regular', sans-serif;
     font-weight: 400;
     font-size: 16px;
@@ -278,12 +380,49 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   }
 
   &__hp-speed {
+    display: flex;
     height: 78px;
     width: 401px;
     border-radius: 8px;
     background: $white-light;
     box-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
     margin-bottom: 21px;
+    padding: 20px 20px 8px 20px;
+    justify-content: space-between;
+  }
+
+  &__hp-head,
+  &__speed-head {
+    font-family: 'Karla-Regular', sans-serif;
+  }
+
+  &__hp-name,
+  &__speed-name {
+    font-family: 'Karla-Regular', sans-serif;
+    font-weight: 700;
+  }
+
+  &__hp-body,
+  &__speed-body {
+    width: 167px;
+    height: 5px;
+    border-radius: 8px;
+    background: $light-grey;
+    overflow: hidden;
+  }
+
+  &__hp-value,
+  &__speed-value {
+    height: 5px;
+    border-radius: 8px;
+  }
+
+  &__hp-value {
+    background: $green-btn;
+  }
+
+  &__speed-value {
+    background: $yellow-btn;
   }
 
   &__stats {
@@ -340,5 +479,19 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
 .type2 {
   margin-left: 250px;
+}
+
+.hp-enter-active, .hp-leave-active {
+  transition: 1s ease-out;
+}
+.hp-enter, .hp-leave-to {
+  transform: translateX(-100px);
+}
+
+.speed-enter-active, .speed-leave-active {
+  transition: 1s ease-out;
+}
+.speed-enter, .speed-leave-to {
+  transform: translateX(-100px);
 }
 </style>

@@ -1,22 +1,24 @@
 export interface IPoke {
-  readonly 'abilities': [{
-    readonly ability: {
-      readonly name: string,
-      readonly url: string
-    }
-  },
-    {
-    readonly ability: {
-      readonly name: string,
-      readonly url: string
-    },
-  },
-    {
+  readonly 'abilities': {
+    readonly name_1: {
       readonly ability: {
         readonly name: string,
         readonly url: string
-      },
-    }]
+      }
+    },
+    readonly name_2: {
+      readonly ability: {
+        readonly name: string,
+        readonly url: string
+      }
+    },
+    readonly name_3: {
+      readonly ability: {
+        readonly name: string,
+        readonly url: string
+      }
+    }
+  }
   readonly 'id': number,
   readonly 'name': string,
   readonly 'img': string,
