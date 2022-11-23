@@ -81,7 +81,9 @@ export default class PokeCard extends Vue {
 
   .prop {
     &__name {
+      position: relative;
       margin-bottom: 19px;
+      z-index: 9;
     }
 
     &__characteristics {

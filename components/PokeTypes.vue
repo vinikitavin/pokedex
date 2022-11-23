@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form v-if="isDesktop || isTablet">
+    <form v-if="screenWidth > 650">
       <div class="poke-types">
         <div class="poke-types__select-box" @click="showCheckboxes()">
           <select>

@@ -1,5 +1,5 @@
 <template>
-  <form v-if="isDesktop || isTablet" id="attack-form">
+  <form v-if="screenWidth > 650" id="attack-form">
     <div class="poke-attack">
       <div class="poke-attack__select-box" @click="showCheckboxes()">
         <select>
@@ -108,7 +108,7 @@ export default class PokeAttack extends Mixins(resizeMixin, transitions) {
       this.minAttack &&
       pokemon.stats.attack <=
       this.maxAttack);
-    if (!this.isMobile) {
+    if (!this.screenWidth <= 650) {
       this.display = 'none';
       this.expanded = false;
     } else {
@@ -133,7 +133,7 @@ export default class PokeAttack extends Mixins(resizeMixin, transitions) {
   }
 
   mounted(): void {
-    if (this.isMobile) {
+    if (this.screenWidth <= 650) {
       this.display = 'block';
       this.expanded = true;
     }

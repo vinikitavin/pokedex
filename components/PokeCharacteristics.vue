@@ -130,10 +130,18 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   @Prop({ required: true }) readonly closeCharactCard!: Function
 
   setPokeNameFontSize(): void {
-    if (this.cardItem.name.length >= 12) {
-      this.nameSize = '22px';
-    } else {
-      this.nameSize = '36px';
+    if (this.screenWidth > 900) {
+      if (this.cardItem.name.length >= 12) {
+        this.nameSize = '22px';
+      } else {
+        this.nameSize = '36px';
+      }
+    } if (this.screenWidth <= 900) {
+      if (this.cardItem.name.length >= 12) {
+        this.nameSize = '16px';
+      } else {
+        this.nameSize = '24px';
+      }
     }
   }
 
@@ -286,15 +294,36 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     border-radius: 16px;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__content {
+      width: 669px;
+      height: 311px;
+    }
+  }
+
   &__img-types {
-    height: 317px;
     width: 364px;
+    height: 317px;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__img-types {
+      width: 305px;
+      height: 311px;
+    }
   }
 
   &__img-wrapper {
     position: relative;
-    height: 371px;
     width: 364px;
+    height: 371px;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__img-wrapper {
+      width: 305px;
+      height: 311px;
+    }
   }
 
   &__types {
@@ -306,9 +335,22 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     z-index: 100;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__types {
+      margin-left: 150px;
+    }
+  }
+
   &__img {
-    height: 317px;
     width: 364px;
+    height: 317px;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__img {
+      width: 305px;
+      height: 254px;
+    }
   }
 
   &__data {
@@ -322,6 +364,12 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-bottom: 25px;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__name-gen-id {
+      margin-bottom: 12px;
+    }
+  }
+
   &__gen {
     font-family: 'SourceSansPro-Regular', sans-serif;
     font-size: 24px;
@@ -329,6 +377,12 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     line-height: 30px;
     margin-right: 8px;
     color: $white-light;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__gen {
+      font-size: 21px;
+    }
   }
 
   &__id {
@@ -345,12 +399,23 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-top: -15px;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__id {
+      font-size: 14px;
+    }
+  }
+
   &__name {
     font-family: 'Karla-Bold', sans-serif;
     font-weight: 700;
-    //font-size: 36px;
     line-height: 42px;
     color: $white-light;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__name {
+      line-height: 24px;
+    }
   }
 
   &__gen-id {
@@ -358,16 +423,30 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   }
 
   &__abilities {
-    height: 60px;
     max-width: 401px;
+    height: 60px;
     border-radius: 8px;
     background: $white-light;
     box-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
     margin-bottom: 21px;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__abilities {
+      max-width: 335px;
+      margin-bottom: 17px;
+      border-radius: 16px;
+    }
+  }
+
   &__abilities-wrapper {
     padding: 12px 0 10px 28px;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__abilities-wrapper {
+      padding: 9px 0 5px 24px;
+    }
   }
 
   &__abilities-head,
@@ -381,8 +460,8 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   &__hp-speed {
     display: flex;
-    height: 78px;
     width: 401px;
+    height: 78px;
     border-radius: 8px;
     background: $white-light;
     box-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
@@ -391,15 +470,39 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     justify-content: space-between;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__hp-speed {
+      width: 335px;
+      height: 65px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      padding: 12px 16px 7px 16px;
+    }
+  }
+
   &__hp-head,
   &__speed-head {
     font-family: 'Karla-Regular', sans-serif;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__hp-head,
+    &__speed-head {
+      font-size: 14px;
+    }
   }
 
   &__hp-name,
   &__speed-name {
     font-family: 'Karla-Regular', sans-serif;
     font-weight: 700;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__hp-name,
+    &__speed-name {
+      font-size: 13px;
+    }
   }
 
   &__hp-body,
@@ -409,6 +512,14 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     border-radius: 8px;
     background: $light-grey;
     overflow: hidden;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__hp-body,
+    &__speed-body {
+      width: 135px;
+      height: 4px;
+    }
   }
 
   &__hp-value,
@@ -444,6 +555,17 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     justify-content: center;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__defense-wrapper,
+    &__attack-wrapper,
+    &__sp-attack-wrapper,
+    &__sp-defense-wrapper {
+      width: 69px;
+      height: 59px;
+      margin-right: 19px;
+    }
+  }
+
   &__sp-defense-wrapper {
     margin-right: 0;
   }
@@ -452,12 +574,36 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-left: 4px;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__defense-data {
+      margin-left: 7px;
+    }
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__attack-data {
+      margin-left: 3px;
+    }
+  }
+
   &__sp-attack-data {
     margin-left: 7px;
   }
 
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__sp-attack-data {
+      margin-left: 12px;
+    }
+  }
+
   &__sp-defense-data {
     margin-left: 11px;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__sp-defense-data {
+      margin-left: 16px;
+    }
   }
 
   &__defense-data,
@@ -474,6 +620,26 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     border-radius: 50%;
     text-align: center;
     margin-top: 10px;
+  }
+
+  @media (max-width: 900px) and (min-width: 375px) {
+    &__defense-data,
+    &__attack-data,
+    &__sp-attack-data,
+    &__sp-defense-data {
+      font-size: 12px;
+      line-height: 25px;
+      width: 30px;
+      height: 30px;
+      margin-top: 7px;
+    }
+  }
+}
+
+@media (max-width: 900px) and (min-width: 375px) {
+  .poke-charact {
+    margin-left: -335px;
+    margin-top: -130px;
   }
 }
 

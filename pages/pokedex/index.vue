@@ -12,7 +12,7 @@
           <PokeSearch @search="getSearchedArr" />
         </div>
         <div class="main-pokedex__pokemons cards">
-          <div v-if="screenWidth >= 750" class="cards__filter">
+          <div v-if="screenWidth > 650" class="cards__filter">
             <PokeTypes class="cards__types" />
             <PokeAttack :full-poke-arr="fullPokeArr" />
           </div>
@@ -252,45 +252,9 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
     this.pageNumber -= 1;
   }
 
-  // async getFullPokeArr(): Promise<void> {
-  //   try {
-  //     const getPokeLink = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=648&offset=0');
-  //     const pokeResponse = await Promise.all(
-  //       getPokeLink.data.results.map((item: IItem) => axios.get(item.url))
-  //     );
-  //     const pokemons: IPoke[] = pokeResponse.map((url: any) => ({
-  //       abilities: {
-  //         name_1: url.data.abilities[0].ability.name,
-  //         name_2: url.data.abilities[1],
-  //         name_3: url.data.abilities[2]
-  //       },
-  //       id: url.data.id,
-  //       name: url.data.name,
-  //       img: url.data.sprites.other.dream_world.front_default,
-  //       stats: {
-  //         hp: { ...url.data.stats }[0].base_stat,
-  //         attack: { ...url.data.stats }[1].base_stat,
-  //         defense: { ...url.data.stats }[2].base_stat,
-  //         special_attack: { ...url.data.stats }[3].base_stat,
-  //         special_defense: { ...url.data.stats }[4].base_stat,
-  //         speed: { ...url.data.stats }[5].base_stat
-  //       },
-  //       type_1: { ...url.data.types }[0].type.name,
-  //       type_2: { ...url.data.types }[1]
-  //     }));
-  //     this.fullPokeArr = pokemons;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   getSearchedArr(data: string): void {
     this.searchValue = data;
   }
-
-  // getAttackArrFromAttackComponent(data: { min: number; max: number; arr: Array<IPoke>}): void {
-  //   this.storeMinMaxAttackArr.GetMinAttack = data;
-  // }
 
   async mounted(): Promise<void> {
     await this.getFullPokeArr();
@@ -354,15 +318,24 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
     margin-bottom: 33px;
   }
 
-  @media (max-width: 1300px) and (min-width: 375px) {
+  @media (max-width: 1300px) and (min-width: 750px) {
     &__title {
       width: 615px;
     }
   }
 
-  @media (max-width: 800px) and (min-width: 375px) {
+  @media (max-width: 750px) and (min-width: 650px) {
     &__title {
-      width: 330px;
+      max-width: 500px;
+      font-size: 24px;
+      line-height: 28px;
+      margin-bottom: 57px;
+    }
+  }
+
+  @media (max-width: 650px) and (min-width: 375px) {
+    &__title {
+      max-width: 320px;
       font-size: 24px;
       line-height: 28px;
       margin-bottom: 57px;
@@ -375,7 +348,7 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
     margin-bottom: 36px;
   }
 
-  @media (max-width: 800px) and (min-width: 375px) {
+  @media (max-width: 750px) and (min-width: 375px) {
     &__search {
       margin-bottom: 16px;
     }
@@ -440,19 +413,9 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
       margin-bottom: 53px;
     }
 
-    @media (max-width: 750px) and (min-width: 650px) {
+    @media (max-width: 800px) and (min-width: 375px) {
       &__filter {
         display: grid;
-        justify-content: center;
-        justify-items: center;
-        margin-bottom: 29px;
-      }
-    }
-
-    @media (max-width: 650px) and (min-width: 375px) {
-      &__filter {
-        display: grid;
-        justify-content: start;
         margin: 0 0 29px 8px;
       }
     }
@@ -480,7 +443,7 @@ export default class PokedexPage extends Mixins(transitions, getFullPokeArr) {
     }
 
     &__types {
-      margin-right: 64px;
+      margin: 0 64px 10px 0;
     }
 
     @media (max-width: 750px) and (min-width: 375px) {

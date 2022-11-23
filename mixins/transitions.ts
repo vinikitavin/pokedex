@@ -31,7 +31,7 @@ export class transitions extends Mixins(resizeMixin) {
 
     hideShadow();
 
-    if (this.isMobile) {
+    if (this.screenWidth <= 650) {
       if (burgerMenuInput!.checked === true) {
         burgerMenuInput!.checked = false;
         setTimeout(hideShadow, 200);
@@ -54,14 +54,14 @@ export class transitions extends Mixins(resizeMixin) {
   }
 
   routeToPagesByNuxtLink(): void {
-    if (this.isMobile) {
+    if (this.screenWidth <= 650) {
       this.hideByShadow();
     }
   }
 
   routeToHomePageByLogo(): void {
     const shadowOfTheMain: HTMLElement | null = document.getElementById('shadow-of-body');
-    if (this.isMobile) {
+    if (this.screenWidth <= 650) {
       if (shadowOfTheMain!.style.display === 'block') {
         this.hideByShadow();
         this.$router.push('/home');

@@ -1,7 +1,7 @@
 <template>
   <div class="website">
-    <TheHeader v-if="isDesktop || isTablet" />
-    <TheHeaderMobile v-if="isMobile" />
+    <TheHeader v-if="screenWidth > 650" />
+    <TheHeaderMobile v-if="screenWidth <= 650" />
     <Nuxt />
     <TheFooter />
   </div>
