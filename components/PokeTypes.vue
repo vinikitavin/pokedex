@@ -8,13 +8,13 @@
           </select>
           <div class="poke-types__over-select" />
         </div>
-        <div class="poke-types__checkboxes types" :style="{ display: display }">
+        <div :style="{ display: display }" class="poke-types__checkboxes types">
           <div class="types__item">
             <label class="types__custom-checkbox">
               <input
                 v-model="typeValue"
-                value="fire"
                 type="checkbox"
+                value="fire"
               >
               <span>Fire</span>
             </label>
@@ -23,8 +23,8 @@
             <label class="types__custom-checkbox">
               <input
                 v-model="typeValue"
-                value="normal"
                 type="checkbox"
+                value="normal"
               >
               <span>Normal</span>
             </label>
@@ -33,8 +33,8 @@
             <label class="types__custom-checkbox">
               <input
                 v-model="typeValue"
-                value="electric"
                 type="checkbox"
+                value="electric"
               >
               <span>Electric</span>
             </label>
@@ -43,8 +43,8 @@
             <label class="types__custom-checkbox">
               <input
                 v-model="typeValue"
-                value="water"
                 type="checkbox"
+                value="water"
               >
               <span>Water</span>
             </label>
@@ -276,9 +276,31 @@ export default class PokeTypes extends Mixins(resizeMixin) {
     }
   }
 }
-</script >
+</script>
 
 <style lang="scss" scoped>
+
+option,
+label {
+  display: flex;
+  font-family: 'SourceSansPro-Regular', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  align-items: center;
+  text-align: center;
+  color: $black;
+}
+
+input {
+  margin-right: 9px;
+}
+
+select {
+  display: inline-block;
+  padding-left: 25px;
+}
+
 .poke-types {
   width: 135px;
 
@@ -387,25 +409,4 @@ export default class PokeTypes extends Mixins(resizeMixin) {
     justify-content: space-between;
   }
 }
-
-  option,
-  label {
-    display: flex;
-    font-family: 'SourceSansPro-Regular', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
-    align-items: center;
-    text-align: center;
-    color: $black;
-  }
-
-  input {
-    margin-right: 9px;
-  }
-
-  select {
-    display: inline-block;
-    padding-left: 25px;
-  }
 </style>
