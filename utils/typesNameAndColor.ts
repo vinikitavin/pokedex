@@ -1,0 +1,41 @@
+export const typeToButtonColor: Map<string, string> = new Map([
+  ['grass', '#73D677'],
+  ['poison', '#d3afdd'],
+  ['fire', '#fd7d24'],
+  ['flying', '#3dc7ef'],
+  ['water', '#4592c4'],
+  ['bug', '#729f3f'],
+  ['normal', '#a3abae'],
+  ['electric', '#eed535'],
+  ['ground', '#ab9842'],
+  ['fairy', '#fdb9e9'],
+  ['fighting', '#d56723'],
+  ['psychic', '#f366b9'],
+  ['rock', '#a38c21'],
+  ['steel', '#9eb7b8'],
+  ['ice', '#51c4e7'],
+  ['ghost', '#7b62a3'],
+  ['dragon', '#f16e57'],
+  ['dark', '#707070']
+]);
+
+export const typeToPokeCardColor: Map<string, string> = new Map([
+  ['grass', 'linear-gradient(45deg, rgb(33, 118, 0) 50%, rgb(115, 8, 221))'],
+  ['poison', 'linear-gradient(90deg, #b599d6,#b599d6,#c4ade6)'],
+  ['fire', 'linear-gradient(180deg, #732119 42.19%, #D93E30 100%)'],
+  ['flying', 'linear-gradient(45deg, #30cfd0, #330867)'],
+  ['water', 'linear-gradient(45deg, #30cfd0, #330867)'],
+  ['bug', 'linear-gradient(45deg, rgb(33, 118, 0) 50%, rgb(115, 8, 221))'],
+  ['normal', 'linear-gradient(45deg, #6a85b6, #bac8e0)'],
+  ['electric', 'linear-gradient(90deg, #ffec70,#ffdd00,#ffdd00)'],
+  ['ground', 'linear-gradient(90deg, #c2a886,#917e64,#755b38)'],
+  ['fairy', 'linear-gradient(90deg, #f59ec2,#e26ea5,#ce3c87)'],
+  ['fighting', 'linear-gradient(90deg, #f16205,#d98d00)'],
+  ['psychic', 'linear-gradient(45deg, #6224e4,#b300cc,#e100b2,#ff189a)'],
+  ['rock', 'linear-gradient(90deg, #682e46,#b6715b,#e0ca80)'],
+  ['steel', 'linear-gradient(90deg, #567599,#1f2e4b)'],
+  ['ice', 'linear-gradient(0deg, #3561e8,#4a7ef2,#558df6)'],
+  ['ghost', 'linear-gradient(90deg, #269ef1,#7036be)'],
+  ['dragon', 'linear-gradient(90deg, #bb256c,#e44429,#ca335d)'],
+  ['dark', 'linear-gradient(90deg, #454545,#212121)']
+]);
