@@ -1,7 +1,7 @@
 <template>
   <form v-if="screenWidth > 650" id="attack-form">
     <div class="poke-attack">
-      <div class="poke-attack__select-box" @click="showCheckboxes()">
+      <div class="poke-attack__select-box" @click="openCheckboxes()">
         <select>
           <option>Ataque</option>
         </select>
@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { resizeMixin } from '@/mixins/resize';
 import { getModule } from 'vuex-module-decorators';
 import SetAttackArray from '@/store/setAttackArray';
@@ -108,9 +108,8 @@ export default class PokeAttack extends Mixins(resizeMixin, transitions) {
       this.minAttack &&
       pokemon.stats.attack <=
       this.maxAttack);
-    if (!this.screenWidth <= 650) {
-      this.display = 'none';
-      this.expanded = false;
+    if (this.screenWidth > 650) {
+      this.hideCheckboxes();
     } else {
       this.closeFilterMenu();
     }
@@ -120,37 +119,48 @@ export default class PokeAttack extends Mixins(resizeMixin, transitions) {
     storeMinMaxAttackArr.changeAttackArray(this.attackPokeArr);
   }
 
-  // @Watch('attackPokeArr')
-
   showCheckboxes(): void {
-    if (!this.expanded) {
-      this.display = 'block';
-      this.expanded = true;
-    } else {
-      this.display = 'none';
-      this.expanded = false;
-    }
+    this.display = 'block';
+    this.expanded = true;
+  }
+
+  hideCheckboxes(): void {
+    this.display = 'none';
+    this.expanded = false;
+  }
+
+  openCheckboxes(): void {
+    this.expanded ? this.hideCheckboxes() : this.showCheckboxes();
   }
 
   mounted(): void {
-    if (this.screenWidth <= 650) {
-      this.display = 'block';
-      this.expanded = true;
-    }
-    this.display = 'none';
-    this.expanded = false;
-    // const formElement = document.getElementById('attack-form');
-    // window.addEventListener('click', (e) => {
-    //   const click = e.composedPath().includes(formElement!);
-    //   if (click) {
-    //     console.log('click outside');
-    //   }
-    // });
+    this.screenWidth <= 650 ? this.showCheckboxes() : this.hideCheckboxes();
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+select {
+  display: inline-block;
+  padding-left: 25px;
+  padding-right: 25px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+option {
+  display: flex;
+  font-family: 'SourceSansPro-Regular', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  align-items: center;
+  text-align: center;
+  color: $black;
+}
+
 .poke-attack {
   width: 285px;
 
@@ -221,7 +231,6 @@ export default class PokeAttack extends Mixins(resizeMixin, transitions) {
     display: flex;
     border-radius: 11px;
     color: $dark;
-    //align-items: end;
     justify-content: center;
     font-family: 'Roboto-Regular', sans-serif;
     font-size: 12px;
@@ -265,28 +274,5 @@ export default class PokeAttack extends Mixins(resizeMixin, transitions) {
     border: 0 solid $light-grey;
     padding-left: 13px;
   }
-}
-
-select {
-  padding-right: 25px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-option {
-  display: flex;
-  font-family: 'SourceSansPro-Regular', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 20px;
-  align-items: center;
-  text-align: center;
-  color: $black;
-}
-
-select {
-  display: inline-block;
-  padding-left: 25px;
 }
 </style>
