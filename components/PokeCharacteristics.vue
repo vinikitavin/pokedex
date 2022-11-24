@@ -29,13 +29,10 @@
             <div class="poke-charact__abilities-head">
               Abilities
             </div>
-            <div v-if="isFirstAbility && !isSecondAbility && !isThirdAbility" class="poke-charact__abilities-names">
-              {{ firstAbilityName }}
-            </div>
-            <div v-if="isFirstAbility && isSecondAbility && !isThirdAbility" class="poke-charact__abilities-names">
+            <div v-if="isSecondAbility && !isThirdAbility" class="poke-charact__abilities-names">
               {{ firstAbilityName }} - {{ secondAbilityName }}
             </div>
-            <div v-if="isFirstAbility && isSecondAbility && isThirdAbility" class="poke-charact__abilities-names">
+            <div v-if="isSecondAbility && isThirdAbility" class="poke-charact__abilities-names">
               {{ firstAbilityName }} - {{ secondAbilityName }} - {{ thirdAbilityName }}
             </div>
           </div>
@@ -100,21 +97,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator';
 import { IPoke } from '@/types/pokemons';
 import { transitions } from '~/mixins/transitions';
+import { firstCursiveLetter } from '@/utils/firstCursiveLetter';
+import { typeToPokeCardColor } from '@/utils/typesNameAndColor';
 
 @Component({
   name: 'PokeCharacteristics'
 })
 export default class PokeCharacteristics extends Mixins(transitions) {
-  pokeCharactBackground: string = ''
+  pokeCharactBackground: string | undefined = ''
   pokeName: string = ''
   firstAbilityName: string = ''
   secondAbilityName: string = ''
   thirdAbilityName: string = ''
 
-  isFirstAbility: boolean = false
   isSecondAbility: boolean = false
   isThirdAbility: boolean = false
 
@@ -131,124 +129,46 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   setPokeNameFontSize(): void {
     if (this.screenWidth > 900) {
-      if (this.cardItem.name.length >= 12) {
-        this.nameSize = '22px';
-      } else {
-        this.nameSize = '36px';
-      }
-    } if (this.screenWidth <= 900) {
-      if (this.cardItem.name.length >= 12) {
-        this.nameSize = '16px';
-      } else {
-        this.nameSize = '24px';
-      }
+      this.cardItem.name.length >= 12 ? this.nameSize = '22px' : this.nameSize = '36px';
     }
+    this.cardItem.name.length >= 12 ? this.nameSize = '16px' : this.nameSize = '24px';
   }
 
-  speedCounter(): void {
+  setHpAndSpeedCounter(): void {
     window.setInterval(() => {
+      if (this.hpQuantity !== this.cardItem.stats.hp) {
+        this.hpQuantity += 1;
+      }
       if (this.speedQuantity !== this.cardItem.stats.speed) {
         this.speedQuantity += 1;
       }
     }, 10);
   }
 
-  hpCounter(): void {
-    window.setInterval(() => {
-      if (this.hpQuantity !== this.cardItem.stats.hp) {
-        this.hpQuantity += 1;
-      }
-    }, 10);
-  }
-
-  setHpLine(): void {
+  setHpAndSpeedLine(): void {
     this.hpWidth = String(this.cardItem.stats.hp);
-  }
-
-  setSpeedLine(): void {
     this.speedWidth = String(this.cardItem.stats.speed);
   }
 
   setAbilities(): void {
-    if (typeof this.cardItem.abilities.name_1 !== 'undefined') {
-      this.firstAbilityName = this.firstCursiveLetter(this.cardItem.abilities.name_1.ability.name);
-      this.isFirstAbility = true;
-    } else {
-      this.firstAbilityName = '';
-      this.isFirstAbility = false;
-    }
+    this.firstAbilityName = firstCursiveLetter(this.cardItem.abilities.name_1.ability.name);
+
     if (typeof this.cardItem.abilities.name_2 !== 'undefined') {
-      this.secondAbilityName = this.firstCursiveLetter(this.cardItem.abilities.name_2.ability.name);
+      this.secondAbilityName = firstCursiveLetter(this.cardItem.abilities.name_2.ability.name);
       this.isSecondAbility = true;
     } else {
-      this.secondAbilityName = '';
       this.isSecondAbility = false;
     }
     if (typeof this.cardItem.abilities.name_3 !== 'undefined') {
-      this.thirdAbilityName = this.firstCursiveLetter(this.cardItem.abilities.name_3.ability.name);
+      this.thirdAbilityName = firstCursiveLetter(this.cardItem.abilities.name_3.ability.name);
       this.isThirdAbility = true;
     } else {
-      this.thirdAbilityName = '';
       this.isThirdAbility = false;
     }
   }
 
   setColorToCharactPokeCard(): void {
-    if (this.cardItem.type_1 === 'fire') {
-      this.pokeCharactBackground = 'linear-gradient(180deg, #732119 42.19%, #D93E30 100%)';
-    }
-    if (this.cardItem.type_1 === 'grass') {
-      this.pokeCharactBackground = 'linear-gradient(45deg, rgb(33, 118, 0) 50%, rgb(115, 8, 221))';
-    }
-    if (this.cardItem.type_1 === 'water') {
-      this.pokeCharactBackground = 'linear-gradient(45deg, #30cfd0, #330867)';
-    }
-    if (this.cardItem.type_1 === 'bug') {
-      this.pokeCharactBackground = 'linear-gradient(45deg, rgb(33, 118, 0) 50%, rgb(115, 8, 221))';
-    }
-    if (this.cardItem.type_1 === 'normal') {
-      this.pokeCharactBackground = 'linear-gradient(45deg, #6a85b6, #bac8e0)';
-    }
-    if (this.cardItem.type_1 === 'poison') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #b599d6,#b599d6,#c4ade6)';
-    }
-    if (this.cardItem.type_1 === 'electric') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #ffec70,#ffdd00,#ffdd00)';
-    }
-    if (this.cardItem.type_1 === 'ground') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #c2a886,#917e64,#755b38)';
-    }
-    if (this.cardItem.type_1 === 'fairy') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #f59ec2,#e26ea5,#ce3c87)';
-    }
-    if (this.cardItem.type_1 === 'psychic') {
-      this.pokeCharactBackground = 'linear-gradient(45deg, #6224e4,#b300cc,#e100b2,#ff189a)';
-    }
-    if (this.cardItem.type_1 === 'fighting') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #f16205,#d98d00)';
-    }
-    if (this.cardItem.type_1 === 'rock') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #682e46,#b6715b,#e0ca80)';
-    }
-    if (this.cardItem.type_1 === 'ghost') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #269ef1,#7036be)';
-    }
-    if (this.cardItem.type_1 === 'ice') {
-      this.pokeCharactBackground = 'linear-gradient(0deg, #3561e8,#4a7ef2,#558df6)';
-    }
-    if (this.cardItem.type_1 === 'dragon') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #bb256c,#e44429,#ca335d)';
-    }
-    if (this.cardItem.type_1 === 'dark') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #454545,#212121)';
-    }
-    if (this.cardItem.type_1 === 'steel') {
-      this.pokeCharactBackground = 'linear-gradient(90deg, #567599,#1f2e4b)';
-    }
-  }
-
-  sendCloseCharacFunction(): void {
-    this.$emit('close', this.closeCharacCard);
+    this.pokeCharactBackground = typeToPokeCardColor.get(this.cardItem.type_1);
   }
 
   closeCharacCard(): void {
@@ -259,12 +179,10 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     this.shadowOfBodyAndStopScrolling();
     this.setColorToCharactPokeCard();
     this.setAbilities();
-    this.setHpLine();
-    this.setSpeedLine();
-    this.hpCounter();
-    this.speedCounter();
+    this.setHpAndSpeedLine();
+    this.setHpAndSpeedCounter();
     this.setPokeNameFontSize();
-    this.pokeName = this.firstCursiveLetter(this.cardItem.name);
+    this.pokeName = firstCursiveLetter(this.cardItem.name);
   }
 }
 </script>
@@ -294,10 +212,18 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     border-radius: 16px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__content {
       width: 669px;
       height: 311px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__content {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
     }
   }
 
@@ -306,10 +232,16 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     height: 317px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__img-types {
       width: 305px;
       height: 311px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__img-types {
+      display: none;
     }
   }
 
@@ -319,10 +251,16 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     height: 371px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__img-wrapper {
       width: 305px;
       height: 311px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__img-wrapper {
+      display: none;
     }
   }
 
@@ -335,9 +273,15 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     z-index: 100;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__types {
       margin-left: 150px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__types {
+      margin-left: 0;
     }
   }
 
@@ -346,10 +290,17 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     height: 317px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__img {
       width: 305px;
       height: 254px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__img {
+      width: 1px;
+      height: 1px;
     }
   }
 
@@ -364,9 +315,15 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-bottom: 25px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__name-gen-id {
       margin-bottom: 12px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__name-gen-id {
+      margin-bottom: 0;
     }
   }
 
@@ -379,7 +336,13 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     color: $white-light;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
+    &__gen {
+      font-size: 21px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
     &__gen {
       font-size: 21px;
     }
@@ -399,7 +362,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-top: -15px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__id {
       font-size: 14px;
     }
@@ -412,9 +375,15 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     color: $white-light;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__name {
       line-height: 24px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__name {
+      font-size: 36px;
     }
   }
 
@@ -431,9 +400,17 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-bottom: 21px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__abilities {
       max-width: 335px;
+      margin-bottom: 17px;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__abilities {
+      max-width: 10px;
       margin-bottom: 17px;
       border-radius: 16px;
     }
@@ -443,7 +420,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     padding: 12px 0 10px 28px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__abilities-wrapper {
       padding: 9px 0 5px 24px;
     }
@@ -470,7 +447,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     justify-content: space-between;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__hp-speed {
       width: 335px;
       height: 65px;
@@ -480,12 +457,22 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     }
   }
 
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__hp-speed {
+      width: 10px;
+      height: 10px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      padding: 0;
+    }
+  }
+
   &__hp-head,
   &__speed-head {
     font-family: 'Karla-Regular', sans-serif;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__hp-head,
     &__speed-head {
       font-size: 14px;
@@ -498,7 +485,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     font-weight: 700;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__hp-name,
     &__speed-name {
       font-size: 13px;
@@ -514,7 +501,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     overflow: hidden;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__hp-body,
     &__speed-body {
       width: 135px;
@@ -555,7 +542,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     justify-content: center;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__defense-wrapper,
     &__attack-wrapper,
     &__sp-attack-wrapper,
@@ -574,13 +561,13 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-left: 4px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__defense-data {
       margin-left: 7px;
     }
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__attack-data {
       margin-left: 3px;
     }
@@ -590,7 +577,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-left: 7px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__sp-attack-data {
       margin-left: 12px;
     }
@@ -600,7 +587,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-left: 11px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__sp-defense-data {
       margin-left: 16px;
     }
@@ -622,7 +609,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     margin-top: 10px;
   }
 
-  @media (max-width: 900px) and (min-width: 375px) {
+  @media (max-width: 900px) and (min-width: 651px) {
     &__defense-data,
     &__attack-data,
     &__sp-attack-data,
@@ -636,10 +623,20 @@ export default class PokeCharacteristics extends Mixins(transitions) {
   }
 }
 
-@media (max-width: 900px) and (min-width: 375px) {
+@media (max-width: 900px) and (min-width: 651px) {
   .poke-charact {
     margin-left: -335px;
     margin-top: -130px;
+  }
+}
+
+@media (max-width: 651px) and (min-width: 375px) {
+  .poke-charact {
+    margin: 0;
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: 999;
   }
 }
 
@@ -650,6 +647,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 .hp-enter-active, .hp-leave-active {
   transition: 1s ease-out;
 }
+
 .hp-enter, .hp-leave-to {
   transform: translateX(-100px);
 }
@@ -657,6 +655,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 .speed-enter-active, .speed-leave-active {
   transition: 1s ease-out;
 }
+
 .speed-enter, .speed-leave-to {
   transform: translateX(-100px);
 }
