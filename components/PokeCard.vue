@@ -26,13 +26,14 @@
         <NavButton :pokemon="pokemon" button-text="" />
       </div>
     </div>
-    <img :src="pokemon.img" class="poke-card__img">
+    <img :src="pokemon.img" class="poke-card__img" alt="pokemon-img">
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import NavButton from '@/components/NavButton.vue';
+import { firstCursiveLetter } from '@/utils/firstCursiveLetter';
 import { IPoke } from '~/types/pokemons';
 
 @Component({
@@ -51,9 +52,7 @@ export default class PokeCard extends Vue {
   }
 
   mounted(): void {
-    const firstLetterToUpperCase: string = this.pokemon.name.split('')[0].toUpperCase();
-    const restPartOfTheWord: string = this.pokemon.name.slice(1);
-    this.pokeName = firstLetterToUpperCase + restPartOfTheWord;
+    this.pokeName = firstCursiveLetter(this.pokemon.name);
   }
 }
 
