@@ -22,9 +22,10 @@ import { firstCursiveLetter } from '@/utils/firstCursiveLetter';
 
 @Component
 export default class NavButton extends Mixins(resizeMixin, transitions) {
-  buttonTypes: { button__nav: boolean, button__type: boolean } = {
+  buttonTypes: { button__nav: boolean, button__type: boolean, button__error: boolean } = {
     button__nav: true,
-    button__type: false
+    button__type: false,
+    button__error: false
   }
 
   isNav: boolean = true
@@ -44,6 +45,12 @@ export default class NavButton extends Mixins(resizeMixin, transitions) {
       this.buttonTypes.button__nav = false;
       this.buttonTypes.button__type = true;
       this.isNav = false;
+    }
+    if (this.$route.path !== '/home' && this.$route.path !== '/pokedex') {
+      this.buttonTypes.button__nav = false;
+      this.buttonTypes.button__type = false;
+      this.buttonTypes.button__error = true;
+      this.isNav = true;
     }
   }
 
@@ -77,6 +84,7 @@ export default class NavButton extends Mixins(resizeMixin, transitions) {
   color: $dark;
   align-items: start;
   justify-content: center;
+  background: $yellow-btn;
 
   &__nav {
     font-family: 'Karla-Bold', sans-serif;
@@ -104,6 +112,28 @@ export default class NavButton extends Mixins(resizeMixin, transitions) {
     height: 16px;
     box-shadow: inset 0px -2px 0px rgba(0, 0, 0, 0.18);
     margin-right: 13px;
+  }
+
+  &__error {
+    font-family: 'Karla-Bold', sans-serif;
+    font-size: 23px;
+    width: 231px;
+    height: 66px;
+    line-height: 52px;
+    background-color: $yellow-btn;
+    box-shadow: inset 0px -9px 0px rgba(0, 0, 0, 0.18);
+  }
+
+  @media (max-width: 750px) and (min-width: 375px) {
+    &__error {
+      font-family: 'Karla-Bold', sans-serif;
+      font-size: 17px;
+      width: 140px;
+      height: 40px;
+      line-height: 36px;
+      background-color: $yellow-btn;
+      box-shadow: inset 0px -9px 0px rgba(0, 0, 0, 0.18);
+    }
   }
 }
 

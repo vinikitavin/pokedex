@@ -190,6 +190,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     this.setHpAndSpeedLine();
     this.setHpAndSpeedCounter();
     this.setPokeNameFontSize();
+    this.pushToErrorPage();
     this.pokeName = firstCursiveLetter(this.cardItem.name);
   }
 }
