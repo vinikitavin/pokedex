@@ -2,11 +2,11 @@
   <div class="poke-charact">
     <img alt="close-icon" class="poke-charact__close-icon" src="@/assets/img/close-icon.svg" @click="closeCharacCard">
     <div :style="{ background: pokeCharactBackground }" class="poke-charact__content">
-      <div class="poke-charact__img-types">
-        <div class="poke-charact__img-wrapper">
+      <div v-if="screenWidth > 650" class="poke-charact__img-types">
+        <div v-if="screenWidth > 650" class="poke-charact__img-wrapper">
           <img :src="cardItem.img" class="poke-charact__img">
         </div>
-        <div class="poke-charact__types">
+        <div v-if="screenWidth > 650" class="poke-charact__types">
           <NavButton :card-item="cardItem" button-text="" />
         </div>
       </div>
@@ -15,12 +15,20 @@
           <div :style="{ fontSize: nameSize }" class="poke-charact__name">
             {{ pokeName }}
           </div>
-          <div class="poke-charact__gen-id">
-            <div class="poke-charact__gen">
-              Generation 1
+          <div v-if="screenWidth <= 650" class="poke-charact__img-wrapper">
+            <img :src="cardItem.img" class="poke-charact__img">
+          </div>
+          <div class="poke-charact__gen-id-wrapper">
+            <div v-if="screenWidth <= 650" class="poke-charact__types">
+              <NavButton :card-item="cardItem" button-text="" />
             </div>
-            <div class="poke-charact__id">
-              {{ cardItem.id }}
+            <div class="poke-charact__gen-id">
+              <div class="poke-charact__gen">
+                Generation 1
+              </div>
+              <div class="poke-charact__id">
+                {{ cardItem.id }}
+              </div>
             </div>
           </div>
         </div>
@@ -204,6 +212,14 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     cursor: pointer;
   }
 
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__close-icon {
+      left: 28px;
+      top: 15px;
+      cursor: pointer;
+    }
+  }
+
   &__content {
     display: flex;
     width: 800px;
@@ -221,9 +237,11 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__content {
+      display: block;
       width: 100vw;
       height: 100vh;
       border-radius: 0;
+      padding: 52px 12px 26px 11px;
     }
   }
 
@@ -241,7 +259,8 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__img-types {
-      display: none;
+      width: 318px;
+      height: 277px;
     }
   }
 
@@ -260,7 +279,11 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__img-wrapper {
-      display: none;
+      display: flex;
+      justify-items: center;
+      width: 318px;
+      height: 277px;
+      z-index: 999999999999;
     }
   }
 
@@ -299,13 +322,21 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__img {
-      width: 1px;
-      height: 1px;
+      width: 318px;
+      height: 277px;
     }
   }
 
   &__data {
     width: 100%;
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__data {
+      display: grid;
+      justify-items: center;
+      width: 100%;
+    }
   }
 
   &__name-gen-id {
@@ -323,7 +354,9 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__name-gen-id {
-      margin-bottom: 0;
+      display: grid;
+      justify-content: center;
+      margin-bottom: 25px;
     }
   }
 
@@ -344,7 +377,7 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__gen {
-      font-size: 21px;
+      font-size: 16px;
     }
   }
 
@@ -368,6 +401,12 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     }
   }
 
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__id {
+      margin-right: 8px;
+    }
+  }
+
   &__name {
     font-family: 'Karla-Bold', sans-serif;
     font-weight: 700;
@@ -383,12 +422,33 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__name {
+      display: flex;
+      justify-content: center;
       font-size: 36px;
+    }
+  }
+
+  &__gen-id-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__gen-id-wrapper {
+      flex-direction: row-reverse;
     }
   }
 
   &__gen-id {
     display: flex;
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__gen-id {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+    }
   }
 
   &__abilities {
@@ -410,9 +470,10 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__abilities {
-      max-width: 10px;
-      margin-bottom: 17px;
-      border-radius: 16px;
+      height: 100px;
+      width: 352px;
+      margin-bottom: 15px;
+      border-radius: 8px;
     }
   }
 
@@ -426,6 +487,12 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     }
   }
 
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__abilities-wrapper {
+      padding: 25px 0 17px 21px;
+    }
+  }
+
   &__abilities-head,
   &__abilities-names {
     font-family: 'Karla-Regular', sans-serif;
@@ -433,6 +500,13 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     font-size: 16px;
     line-height: 19px;
     color: $black;
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__abilities-head {
+      font-size: 31px;
+      margin-bottom: 18px;
+    }
   }
 
   &__hp-speed {
@@ -459,11 +533,17 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   @media (max-width: 651px) and (min-width: 375px) {
     &__hp-speed {
-      width: 10px;
-      height: 10px;
-      border-radius: 16px;
-      margin-bottom: 18px;
-      padding: 0;
+      display: block;
+      width: 352px;
+      height: 185px;
+      margin-bottom: 12px;
+      padding: 15px 0 14px 20px;
+    }
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__hp {
+      margin-bottom: 21px;
     }
   }
 
@@ -492,6 +572,13 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     }
   }
 
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__hp-name,
+    &__speed-name {
+      margin-bottom: 12px;
+    }
+  }
+
   &__hp-body,
   &__speed-body {
     width: 167px;
@@ -509,10 +596,26 @@ export default class PokeCharacteristics extends Mixins(transitions) {
     }
   }
 
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__hp-body,
+    &__speed-body {
+      width: 256px;
+      height: 8px;
+    }
+  }
+
   &__hp-value,
   &__speed-value {
     height: 5px;
     border-radius: 8px;
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__hp-value,
+    &__speed-value {
+      height: 8px;
+      border-radius: 8px;
+    }
   }
 
   &__hp-value {
@@ -525,6 +628,12 @@ export default class PokeCharacteristics extends Mixins(transitions) {
 
   &__stats {
     display: flex;
+  }
+
+  @media (max-width: 651px) and (min-width: 375px) {
+    &__stats {
+      width: 352px;
+    }
   }
 
   &__defense-wrapper,
